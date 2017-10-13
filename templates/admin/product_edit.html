@@ -1,0 +1,293 @@
+{include file=admin/admin_header.html}
+
+<form method='post' action='{$config.site_url}admin/product_handler.php' />
+{if $smarty.request.id}
+	{* update page *}
+	{core assign=page method=getContent pageid=product_edit}
+	{core assign=tips method=getContent pageid=product_edit_tips}
+	{core assign=data method=getTable table=products list=1 where="id=`$smarty.request.id`"}
+	<input type='hidden' name='mode' value='update_product' />
+	<input type='hidden' name='data[id]' value='{$smarty.request.id}' />
+{else}
+	{* add page *}
+	{core assign=page method=getContent pageid=product_add}
+	{core assign=tips method=getContent pageid=product_add_tips}
+	<input type='hidden' name='mode' value='insert_product' />
+	<input type='hidden' name='data[active]' value='1' />
+{/if}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+
+{* Product Information Form *}
+<table class='list-table'>
+{*
+<tr>
+	<th style='width:100px;'>SKU</th>
+	<td><input type='text' name='data[sku]' value='{$data.sku}' style='width:100%;' /></td>
+	<th>Price</th>
+	<td><input type='text' name='data[price]' value='{$data.price}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Stock</th>
+	<td><input type='text' name='data[stock]' value='{$data.stock}' style='width:100%;' /></td>
+	<th>Shipping</th>
+	<td><input type='text' name='data[shipping]' value='{$data.shipping}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Handling</th>
+	<td><input type='text' name='data[handling]' value='{$data.handling}' style='width:100%;' /></td>
+	<th>Actual Weight</th>
+	<td><input type='text' name='data[product_weight]' value='{$data.weight}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Length</th>
+	<td><input type='text' name='data[length]' value='{$data.length}' style='width:100%;' /></td>
+	<th>Height</th>
+	<td><input type='text' name='data[height]' value='{$data.height}' style='width:100%;' /></td>
+</tr>
+*}
+{if $data.id != '3'}
+<tr>
+	<th>Product ID</th>
+	<td><input type='text' name='data[sku]' value='{$data.sku}' style='width:100%;' /></td>
+	<th>Weight</th>
+	<td><input type='text' name='data[product_weight]' value='{$data.product_weight}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Price</th>
+	<td><input type='text' name='data[price]' value='{$data.price}' style='width:100%;' /></td>
+	<th>PASS Price</th>
+	<td><input type='text' name='data[price2]' value='{$data.price2}' style='width:100%;' /></td>
+</tr>
+{/if}
+<tr>
+	<th>Title</th>
+	<td colspan='3'><input type='text' name='data[title]' value='{$data.title}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Description</th>
+	<td colspan='3'><textarea name='data[description]' style='width:100%;height:225px;' id='wysiwyg' >{$data.description}</textarea></td>
+</tr>
+</table>
+<input type='submit' value='submit' />
+</form>
+
+{* Only show if we are editing a product *}
+{if $data.id}
+	{* Product Categories *}
+	{if $config.show_product_categories}
+	<h2 class='toggle' target='locations_container'>Locations</h2>
+	{core assign=cats method=getTable table=product_categories join=products_to_categories where="products_to_categories.product_id=`$data.id`" join_id='category_id'}
+	<div id='locations_container' style='display:none;'>
+		<table class='list-table'>
+			<tr>
+				<th>Category</th>
+				<th>Actions</th>
+			</tr>
+				{if count($cats)}
+					{foreach item=c from=$cats}
+						<tr>
+							<td>
+								{$c.title}
+							</td>
+							<td>
+								<a href='{$config.site_url}admin/product_handler.php?mode=remove_product_to_category&data[product_id]={$data.id}&data[category_id]={$c.id}'>Delete</a>
+							</td>
+						</tr>
+					{/foreach}
+				{else}
+					<tr>
+						<td colspan='2'>
+							Not assigned to a location
+						</td>
+					</tr>
+				{/if}
+			<tr>
+				<td colspan='2'>
+					{core assign=ids method=ids data=$cats}
+					{if $ids}
+						{core assign=all_cats method=getCategoriesGrouped table=product_categories where="active = 1 and id not in (`$ids`)"}
+					{else}
+						{core assign=all_cats method=getCategoriesGrouped table=product_categories where="active = 1"}
+					{/if}
+					{if count($all_cats)}
+						<form method='post' action='{$config.site_url}admin/product_handler.php'>
+						<input type='hidden' name='mode' value='insert_product_to_category' />
+						<input type='hidden' name='data[product_id]' value='{$data.id}' />
+						{html_options options=$all_cats name=data[category_id]}
+						<input type='submit' value='Add To Category' />
+						</form>
+					{else}
+						No Categories Left
+					{/if}
+				</td>
+			</tr>
+		</table>
+	</div>
+	{/if}
+
+	{* Product Groups *}
+	{if $config.show_product_groups}
+	<h2 class='toggle' target='groups_container'>Groups</h2>
+	{core assign=cats method=getTable table=product_groups join=products_to_groups where="products_to_groups.product_id=`$data.id`" join_id='group_id'}
+	<div id='groups_container' style='display:none;'>
+		<table class='list-table'>
+			<tr>
+				<th>Category</th>
+				<th>Actions</th>
+			</tr>
+				{if count($cats)}
+					{foreach item=c from=$cats}
+						<tr>
+							<td>
+								{$c.title}
+							</td>
+							<td>
+								<a href='{$config.site_url}admin/product_handler.php?mode=remove_product_to_group&data[product_id]={$data.id}&data[group_id]={$c.id}'>Delete</a>
+							</td>
+						</tr>
+					{/foreach}
+				{else}
+					<tr>
+						<td colspan='2'>
+							Not assigned to a group.
+						</td>
+					</tr>
+				{/if}
+			<tr>
+				<td colspan='2'>
+					{core assign=ids method=ids data=$cats}
+					{if $ids}
+						{core assign=all_cats method=getCategories table=product_groups where="active = 1 and id not in (`$ids`)"}
+					{else}
+						{core assign=all_cats method=getCategories table=product_groups where="active = 1"}
+					{/if}
+					{if count($all_cats)}
+						<form method='post' action='{$config.site_url}admin/product_handler.php'>
+						<input type='hidden' name='mode' value='insert_product_to_group' />
+						<input type='hidden' name='data[product_id]' value='{$data.id}' />
+						{html_options options=$all_cats name=data[group_id]}
+						<input type='submit' value='Add To Group' />
+						</form>
+					{else}
+						No Groups Remaining
+					{/if}
+				</td>
+			</tr>
+		</table>
+	</div>
+	{/if}
+
+	{if $config.show_product_descriptions}
+		<h2 class='toggle' target='product_descriptions_container'>Product Descriptions</h2>
+		<div id='product_descriptions_container' style='display:none;'>
+				{core assign=descriptions method=getTable table=product_descriptions join=products_to_descriptions where="product_id=`$data.id`" join_id='description_id' order='weight asc'}
+				{foreach item=d from=$descriptions name='descriptions'}
+					<div class='toggle' target='product_description_form{$smarty.foreach.descriptions.iteration}'>{$d.title}
+						<div class='h2_delete'><a href='{$config.site_url}admin/product_handler.php?mode=remove_product_description&description_id={$d.id}&product_id={$data.id}'>Delete</a></div>
+					</div>
+					<div id='product_description_form{$smarty.foreach.descriptions.iteration}' style='display:none;'>
+						<form method='post' action='{$config.site_url}admin/product_handler.php'>
+						<input type='hidden' name='product_id' value='{$data.id}' />
+						<input type='hidden' name='data[id]' value='{$d.id}' />
+						<input type='hidden' name='mode' value='update_product_description' />
+								<table class='list-table'>
+								<tr>
+									<th>Title</th>
+									<td><input type='text' name='data[title]' value='{$d.title}' /></td>
+									<th>Weight</th>
+									<td><input type='text' name='data[weight]' value='{$d.weight}' /></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td colspan='3'><textarea name='data[description]' id='wysiwyg{$smarty.foreach.descriptions.iteration}' style='width:100%;height:200px;'>{$d.description}</textarea></td>
+								</tr>
+								<tr>
+									<td colspan='4'>
+									<input type='submit' value='Update Description' />
+									</td>
+								</tr>
+								</table>
+						</form>
+					</div>
+				{/foreach}
+			<div class='toggle' target='product_description_form'>Add Description</div>
+			<div id='product_description_form' style='display:none;'>
+				<form method='post' action='{$config.site_url}admin/product_handler.php'>
+					<input type='hidden' name='product_id' value='{$data.id}' />
+					<input type='hidden' name='mode' value='add_product_description' />
+							<table class='list-table'>
+							<tr>
+								<th>Title</th>
+								<td><input type='text' name='data[title]' id='' /></td>
+								<th>Weight</th>
+								<td><input type='text' name='data[weight]' value='' /></td>
+							</tr>
+							<tr>
+								<th>Description</th>
+								<td colspan='3'><textarea name='data[description]' id='wysiwyg0' style='width:100%;height:200px;'></textarea></td>
+							</tr>
+							<tr>
+								<td colspan='4'>
+								<input type='submit' value='Update Description' />
+								</td>
+							</tr>
+							</table>
+				</form>
+			</div>
+
+		</div>
+	{/if}
+
+	{* Product Images *}
+	{if $config.show_product_images}
+	<h2 class='toggle' target='product_images_container'>Product Images</h2>
+		{core assign=imgs method=getTable table=product_images join=products_to_images where="products_to_images.product_id = `$data.id`" join_id='image_id'}
+	<div id='product_images_container' style='display:none;'>
+		<div id='product_images'>
+			{if count($imgs)}
+				{foreach item=i from=$imgs}
+					<div>
+						<a href='#' class='product_image_thumb'><img src='{$config.image_url}product_images/thumb/{$i.filename}' /></a><br clear='both' />
+						<a href='{$config.site_url}admin/product_handler.php?mode=remove_image&id={$i.id}&product_id={$data.id}&filename={$i.filename}'>Delete</a>
+					</div>
+				{/foreach}
+			{else}
+				No Images
+			{/if}
+			<br clear='both' />
+		</div>
+		<table class='list-table'>
+			<tr>
+				<th>File</th>
+				<td colspan='2'>
+					<form method='post' action='{$config.site_url}admin/product_handler.php' enctype="multipart/form-data">
+					<input type='hidden' name='mode' value='insert_image' />
+					<input type='hidden' name='data[product_id]'  value='{$data.id}' />
+					<input type='file' name='image' />
+				</td>
+			</tr>
+			{if $config.show_product_image_title}
+				<tr>
+					<th>Title</th>
+					<td>
+						<input type='text' name='data[title]' value='' style='width:100%;' />
+					</td>
+				</tr>
+			{/if}
+			{if $config.show_product_image_description}
+				<tr>
+					<th>Description</th>
+					<td>
+						<input type='text' name='data[description]' value='' style='width:100%;' />
+					</td>
+				</tr>
+			{/if}
+		</table>
+			<input type='submit' value='Add Image' />
+		</form>
+	</div>
+	{/if}
+{/if}
+{include file=admin/admin_footer.html}

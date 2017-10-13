@@ -1,0 +1,42 @@
+{include file=admin/admin_header.html}
+
+ {* get the main content *}
+{core assign=page method=getContent pageid=event_category_list}
+ {* get the tip content (footer checks for $tip) *}
+{core assign=tips method=getContent pageid=event_category_list_tips}
+ {* get a list from the pages table *}
+{core assign=pages method=getTable table=event_categories limit=$config.admin_event_limit|default:10  page=$smarty.request.page|default:1 where='active=1' order='weight asc'}
+ {* get the pagination information *}
+{core assign=pagination method=getPagination table=event_categories limit=$config.admin_event_limit|default:10 page=$smarty.request.page|default:1 where='active=1'}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+
+{if $pagination.pages > 1}
+	{* only show pagination if there is more than one page *}
+	<div class='list-table-pagination'>
+		<div class='prev'><a href='{$config.site_url}admin/event_category_list.php?page={$pagination.prev}'>Prev</a></div>
+		<div class='pages'>Page {$smarty.request.page|default:1} of {$pagination.pages}</div>
+		<div class='next'><a href='{$config.site_url}admin/event_category_list.php?page={$pagination.next}'>Next</a></div>
+	</div>
+{/if}
+<form method='post' action='{$config.site_url}admin/event_handler.php'>
+<input type='hidden' name='mode' value='order_event_categories' />
+<table class='list-table'>
+<tr>
+	<th>Title</th>
+	<th>Weight</th>
+	<th style='width:100px;text-align:center;'>Actions</th>
+</tr>
+	{foreach item=t from=$pages}
+	<tr>
+		<td>{$t.title}</td>
+		<td style='width:100px;'><input type='text' name='weights[]' value='{$t.weight}' class='weight_input' /> <input type='hidden' name='ids[]' value='{$t.id}' /></td>
+		<td style='text-align:right;'><a href='{$config.site_url}admin/event_category_edit.php?id={$t.id}'>Edit</a> : <a href='{$config.site_url}admin/event_handler.php?mode=remove_event_category&id={$t.id}'>Delete</a></td>
+	</tr>
+	{/foreach}
+</table>
+<input type='submit' value='submit' />
+</form>
+
+{include file=admin/admin_footer.html}

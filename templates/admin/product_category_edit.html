@@ -1,0 +1,48 @@
+{include file=admin/admin_header.html}
+
+<form method='post' action='{$config.site_url}admin/product_handler.php' />
+{if $smarty.request.id}
+	{* update page *}
+	{core assign=page method=getContent pageid=product_category_edit}
+	{core assign=tips method=getContent pageid=product_category_edit_tips}
+	{core assign=data method=getTable table=product_categories list=1 where="id=`$smarty.request.id`"}
+	<input type='hidden' name='mode' value='update_product_category' />
+	<input type='hidden' name='data[id]' value='{$smarty.request.id}' />
+{else}
+	{* add page *}
+	{core assign=page method=getContent pageid=product_category_add}
+	{core assign=tips method=getContent pageid=product_category_add_tips}
+	<input type='hidden' name='mode' value='insert_product_category' />
+	<input type='hidden' name='data[active]' value='1' />
+	<input type='hidden' name='data[weight]' value='0' />
+{/if}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+<table class='list-table'>
+<tr>
+	<th>Parent</th>
+	<td>
+		{core assign=cats method=getCategories table=product_categories where='active=1 and parent_id is null'}
+		{html_options name=data[parent_id] options=$cats selected=$data.parent_id}
+	</td>
+</tr>
+<tr>
+	<th>Title</th>
+	<td><input type='text' name='data[title]' value='{$data.title}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Description</th>
+	<td><textarea name='data[description]' id='wysiwyg' style='width:100%;height:250px;'>{$data.description}</textarea></td>
+</tr>
+{if $config.show_product_category_image}
+	<tr>
+		<th>Image</th>
+		<td><input type='file' name='image' value='{$data.image}' /></td>
+	</tr>
+{/if}
+</table>
+<input type='submit' value='submit' />
+</form>
+
+{include file=admin/admin_footer.html}

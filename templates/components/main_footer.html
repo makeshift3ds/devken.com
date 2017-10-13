@@ -1,0 +1,83 @@
+		<br clear='all' />
+		</div>	{* close container *}
+		<div id='footer' class='small center'>
+			<div id='client_login' class='box'>
+				<h3>Client Login</h3>
+				<form method='post' action='{$config.site_url}login'>
+				<p>
+					<label for='username'>username:</label><br />
+					<input type='text' name='username' />
+				</p>
+				<p>
+					<label for='password'>password:</label><br />
+					<input type='password' name='password' />
+				</p>
+				<input type='submit' value='login' />
+				</form>
+
+					{if $account_info.type_id == 1}
+						<p><a href='{$config.site_url}admin'>Admin Home</a></p>
+					{/if}
+			</div>
+			<div id='client_want' class='box'>
+				<h3>Look No Further</h3>
+				<p>
+					Do you need a unique business, ecommerce or personal website?
+				</p>
+				<p>
+					I have the knowledge, skills & experience to help you create a successful website.
+				</p>
+
+					<a href='mailto:kenelliottmc@gmail.com'>Contact Me</a> or
+
+					<a href='{$config.site_url}products'>Review Services</a>
+				</p>
+			</div>
+			<div id='fav_sites' class='box'>
+				<h3>Sites I Dig</h3>
+				<ul>
+					<li><a href='http://www.reddit.com' target='_blank'>Reddit</a></li>
+					<li><a href='http://www.thewoodwhisperer.com' target='_blank'>The Wood Whisperer</a></li>
+					<li><a href='http://www.freenode.com' target='_blank'>FreeNode</a></li>
+					<li><a href='http://www.binpress.com' target='_blank'>Binpress</a></li>
+					<li><a href='http://net.tutsplus.com' target='_blank'>Net.TutsPlus.com</a></li>
+					<li><a href='http://phparch.com' target='_blank'>PHP|Architect</a></li>
+				</ul>
+
+			</div>
+			<div id='flickr_feed' class='box'>
+				<h3>Flickr Feed</h3>
+				{core assign=flickr method=getTable table=flickr}
+				{foreach item=img from=$flickr}
+					{if $img.url != ''}
+						<a href='{$img.url|replace:"_s.jpg":".jpg"}' rel='lightbox'><img src='{$img.url}' title='{$img.title}::{$img.description|strip_tags}' width='50' height='50'></a>
+					{/if}
+				{/foreach}
+			</div>
+
+			<div id='copyright'>Copyright &copy; {$smarty.now|date_format:'%Y'} and beyond!</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	{literal}
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-7574965-1']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	{/literal}
+	</script>
+</body>
+</html>
+
+{* Leave this *}
+{if $smarty.request.debug == 'smarty' && $smarty.session.super_user}
+	{debug}
+{elseif $smarty.request.debug == 'registry' && $smarty.session.super_user}
+	{core method=dumpRegistry}
+{/if}

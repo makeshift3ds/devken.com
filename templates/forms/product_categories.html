@@ -1,0 +1,77 @@
+{core method=getTable assign=product method=getTable table=products  where='active=1' order='id asc'}
+
+<div id='content_scroller'>
+	{core method=getTable assign=cats table=product_categories where='active=1'}
+	{foreach item=c from=$cats}
+		{$c.title}
+	{/foreach}
+</div>
+
+
+{* TABLE EXPLORER
+<table cellpadding='10' cellspacing='0' border='0'>
+<tr>
+	<td style='background-color:#EEE;width:170px;' valign='top'>
+		<h3>Tables</h3>
+		<ul style='margin:0;padding:0;list-style-type:none;'>
+			<li> <a href='{$config.site_url}products&table=carts'>Carts</a></li>
+			<li> <a href='{$config.site_url}products&table=cart_items'>Cart Items</a></li>
+			<li> <a href='{$config.site_url}products&table=gift_certificates'>Gift Certificates</a></li>
+			<li> <a href='{$config.site_url}products&table=products'>Products</a></li>
+			<li> <a href='{$config.site_url}products&table=product_images'>Product Images</a></li>
+			<li> <a href='{$config.site_url}products&table=product_image_galleries'>Product Image Galleries</a></li>
+			<li> <a href='{$config.site_url}products&table=product_reviews'>Product Reviews</a></li>
+			<li> <a href='{$config.site_url}products&table=product_tags'>Product Tags</a></li>
+			<li> <a href='{$config.site_url}products&table=promotional_codes'>Promotional Codes</a></li>
+			<li> <a href='{$config.site_url}products&table=users'>Users</a></li>
+			<li> <a href='{$config.site_url}products&table=user_config'>User Config</a></li>
+			<li> <a href='{$config.site_url}products&table=user_data'>User Data</a></li>
+			<li> <a href='{$config.site_url}products&table=user_favorites'>User Favorites</a></li>
+		</ul>
+	</td>
+	<td valign='top'>
+		<h1>Add to Table : {$smarty.request.table}</h1>
+		{core assign=cols method=getTableColumns table=$smarty.request.table database=$config.db_name}
+		<form method='post' action='{$config.site_url}products'>
+			<input type='hidden' name='mode' value='add_product' />
+			<input type='hidden' name='table' value='{$smarty.request.table}' />
+			{foreach item=k from=$cols}
+				{if $k.column_name != 'id' && $k.column_name != 'date_modified'}
+					{$k.column_name}<br />
+					<input type='text' name='data[{$k.column_name}]' value='
+					{if ($k.data_type == 'int' || $k.data_type == 'decimal') && $k.column_name != 'user_id'}
+						{randnum min=1 max=100 decimals=0}
+					{elseif $k.data_type == 'tinyint' || $k.column_name == 'user_id'}
+						1
+					{elseif $k.data_type == 'timestamp'}
+						now()
+					{else}
+						{$k.column_name}
+					{/if}
+					'><p />
+				{/if}
+			{/foreach}
+			<input type='submit' value='Submit' />
+		</form><p />
+
+		{core assign=rows method=getTable table=$smarty.request.table limit='10 ' }
+
+		<table cellpadding='2' cellspacing='0' border='0'>
+			<tr style='background-color:#CCC;font-weight:bold;'>
+				{foreach item=k from=$cols}
+					<td>{$k.column_name}</td>
+				{/foreach}
+			</tr>
+			{foreach item=r from=$rows}
+				<tr style='background-color: {cycle values="#EEE,#FFF"};'>
+					{foreach item=k from=$cols}
+						<td>{$r[$k.column_name]}</td>
+					{/foreach}
+				</tr>
+			{/foreach}
+		</table>
+	</td>
+</tr>
+</table>
+
+*}

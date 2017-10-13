@@ -1,0 +1,84 @@
+
+ {* get a list from the products table *}
+ {if $smarty.request.id}
+ 	{* Get a list from all the blog categories - no category = no show *}
+ 	{assign var=where value="blog_posts.active=1 and blog_posts_to_categories.category_id=`$smarty.request.id`"}
+{else}
+ 	{* Get a list from a single category *}
+ 	{assign var=where value="blog_posts.active=1"}
+{/if}
+
+{if $smarty.request.query} {* Search *}
+	{core assign=pages method=getTable table=blog_posts where=$where join=blog_posts_to_categories join_id=blog_id cols=$searches.blog_posts query=$smarty.request.query limit=$config.page_search_limit|default:10 page=$smarty.request.page|default:1 order='score desc' debug=null}
+	{core assign=pagination method=getPagination table=blog_posts join=blog_posts_to_categories join_id=blog_id limit=$config.page_search_limit|default:10 page=$smarty.request.page|default:1 where=$where cols=$searches.blog_posts query=$smarty.request.query}
+{elseif $smarty.request.pub} {* MonthYear *}
+	{core assign=pages method=getTable table=blog_posts where="date_format(publish_date,'%m%y') = '`$smarty.request.pub`' and active = 1" order='publish_date desc'}
+	{core assign=pagination method=getPagination table=blog_posts limit=$config.blog_limit|default:10 page=$smarty.request.page|default:1 where="date_format(publish_date,'%m%y') = '`$smarty.request.pub`' and active = 1"}
+{elseif $smarty.request.id} {* Category *}
+	{core assign=pages method=getTable table=blog_posts join=blog_posts_to_categories join_id=blog_id limit=$config.blog_limit|default:10 page=$smarty.request.page|default:1 order='publish_date desc' where="blog_posts.active=1 and blog_posts_to_categories.category_id=`$smarty.request.id`"}
+	{core assign=pagination method=getPagination table=blog_posts join=blog_posts_to_categories join_id=blog_id limit=$config.blog_limit|default:10 page=$smarty.request.page|default:1 where='active=1'	}
+{else} {* All *}
+	{core assign=pages method=getTable table=blog_posts join=blog_posts_to_categories join_id=blog_id limit=$config.blog_limit|default:10 page=$smarty.request.page|default:1 order='publish_date desc' where='active=1'	}
+	{core assign=pagination method=getPagination table=blog_posts join=blog_posts_to_categories join_id=blog_id limit=$config.blog_limit|default:10 page=$smarty.request.page|default:1 where='active=1'	}
+{/if}
+
+<div id='blog_left'>
+	{if $pagination.pages > 1}
+		{* only show pagination if there is more than one page *}
+		<div class='list-table-pagination'>
+			<div class='prev'><a href='{$config.site_url}product_category&id={$smarty.request.id}&page={$pagination.prev}'>Prev</a></div>
+			<div class='pages'>Page {$smarty.request.page|default:1} of {$pagination.pages}</div>
+			<div class='next'><a href='{$config.site_url}product_category&id={$smarty.request.id}&page={$pagination.next}'>Next</a></div>
+		</div>
+	{/if}
+
+	<div id='blog_list'>
+		{foreach item=t from=$pages}
+			<div class='blog_header'>
+				<a href='{$config.site_url}blog/{$t.slug}'>{$t.title|truncate:'150':'..'}</a><br />
+				<span class='small red'>{$t.publish_date|date_format:'%A, %B %e, %Y'}</span>
+			</div>
+			<div class='blog_content'>{$t.content}</div>
+			<hr />
+		{/foreach}
+		{if !count($pages)}
+			<div class='blog_header'>
+				No Posts Found
+			</div>
+		{/if}
+	</div>
+</div>
+<div id='blog_right'>
+	<div class='widget'>
+		<h2>Categories</h2>
+		{core assign='cats' method=getTable table=blog_categories order='title asc'}
+		{foreach item=c from=$cats}
+			{core assign=ct method=getTable table=blog_posts where="id in (select distinct blog_id from blog_posts_to_categories where category_id = '`$c.id``') and active=1" cols='count(*) as count' list=1 }
+			<a href='{$config.site_url}blog&id={$c.id}'>{$c.title}</a> <span class='small red'>({$ct.count|default:0})</span><br />
+		{/foreach}
+	</div>
+	<div class='widget'>
+		<h2>Images</h2>
+		{core assign=imgs method=getTable table=blog_images where='active=1 and blog_id in (select distinct blog_id from blog_posts_to_categories)' order='id desc' group='download'}
+		{foreach item=img from=$imgs}
+			<a href='{$config.site_url}{$img.download}' class='image_lightbox'><img src='{$config.site_url}{$img.download|replace:'/Image/':'/Thumb/'}' class='blog_image' /></a>
+		{/foreach}
+		<br clear='all' />
+	</div>
+	<div class='widget'>
+		<h2>Search</h2>
+		<form method='post' action='{$config.site_url}blog'>
+		<input type='text' name='query' value='' /><input type='submit' value='Go' />
+		</form>
+	</div>
+	{core assign=dates method=getTable table='blog_posts'  cols='publish_date,count(*) as count' where='active=1' group='date_format(publish_date,"%m%y")' order='publish_date desc'}
+	{if count($dates) > 1}
+		<div class='widget'>
+			<h2>Archive</h2>
+			{foreach item=dt from=$dates}
+				<a href='{$config.site_url}blog&pub={$dt.publish_date|date_format:"%m%y"}'>{$dt.publish_date|date_format:'%B, %Y'}</a>
+				<span class='small red'>({$dt.count})</span><br />
+			{/foreach}
+		</div>
+	{/if}
+</div>

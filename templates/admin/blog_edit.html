@@ -1,0 +1,96 @@
+{include file=admin/admin_header.html}
+
+<form method='post' action='{$config.site_url}admin/blog_handler.php' />
+{if $smarty.request.id}
+	{* update page *}
+	{core assign=page method=getContent pageid=blog_edit}
+	{core assign=tips method=getContent pageid=blog_edit_tips}
+	{core assign=data method=getTable table=blog_posts list=1 where="id=`$smarty.request.id`"}
+	<input type='hidden' name='mode' value='update_post' />
+	<input type='hidden' name='data[id]' value='{$smarty.request.id}' />
+{else}
+	{* add page *}
+	{core assign=page method=getContent pageid=blog_add}
+	{core assign=tips method=getContent pageid=blog_add_tips}
+	<input type='hidden' name='mode' value='insert_post' />
+	<input type='hidden' name='data[active]' value='1' />
+{/if}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+<table class='list-table'>
+<tr>
+	<th>URL</th>
+	<td><input type='text' name='data[slug]' value='{$data.slug}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Meta Description</th>
+	<td><input type='text' name='data[meta_description]' value='{$data.meta_description}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Meta Keywords</th>
+	<td><input type='text' name='data[meta_keywords]' value='{$data.meta_keywords}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Title</th>
+	<td><input type='text' name='data[title]' value='{$data.title}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Content</th>
+	<td><textarea name='data[content]' id='wysiwyg' style='width:100%;height:250px;'>{$data.content}</textarea></td>
+</tr>
+</table>
+<input type='submit' value='submit' />
+</form>
+
+{* Only show if we are editing a post *}
+{if $data.id}
+	{* Blog Categories *}
+	<h2 class='toggle' target='locations_container'>Locations</h2>
+	{core assign=cats method=getTable table=blog_categories join=blog_posts_to_categories where="blog_posts_to_categories.blog_id=`$data.id`" join_id='category_id'}
+	<div id='locations_container'>
+		<table class='list-table'>
+			<tr>
+				<th>Category</th>
+				<th>Actions</th>
+			</tr>
+				{if count($cats)}
+					{foreach item=c from=$cats}
+						<tr>
+							<td>
+								{$c.title}
+							</td>
+							<td style='width:30px;'>
+								<a href='{$config.site_url}admin/blog_handler.php?mode=remove_blog_post_to_category&data[blog_id]={$data.id}&data[category_id]={$c.id}'>Delete</a>
+							</td>
+						</tr>
+					{/foreach}
+				{else}
+					<tr>
+						<td colspan='2'>
+							Not assigned to a location
+						</td>
+					</tr>
+				{/if}
+			<tr>
+				<td colspan='2'>
+					{core assign=ids method=ids data=$cats}
+					{if !$ids}{assign var=ids value=0}{/if}	{* Because MySQL Needs something in the not in () clause *}
+					{core assign=all_cats method=getCategories table=blog_categories where="active = 1 and id not in (`$ids`)"}
+					{if count($all_cats)}
+					<form method='post' action='{$config.site_url}admin/blog_handler.php'>
+					<input type='hidden' name='mode' value='insert_blog_post_to_category' />
+					<input type='hidden' name='data[blog_id]' value='{$data.id}' />
+					{html_options options=$all_cats name=data[category_id]}
+					<input type='submit' value='Add To Category' />
+					</form>
+					{else}
+					<span class='red'>No Categories Remaining</span>
+					{/if}
+				</td>
+			</tr>
+		</table>
+	</div>
+	{/if}
+
+{include file=admin/admin_footer.html}

@@ -1,0 +1,30 @@
+
+			<div id='menu1'>
+				<map name="menu1">
+					<area shape="rect" coords="2,0,92,13" href="{$config.site_url}pre-natal" alt="Grow and Blossom - Prenatal" title="Grow and Blossom - Prenatal"    />
+					<area shape="rect" coords="134,0,240,13" href="{$config.site_url}post-natal" alt="Grow and Blossom - Post-Natal" title="Grow and Blossom - Post-Natal"    />
+					<area shape="rect" coords="275,0,398,13" href="{$config.site_url}mommy-baby" alt="Grow and Blossom - Mommy-Baby" title="Grow and Blossom - Mommy-Baby"    />
+					<area shape="rect" coords="439,0,529,13" href="{$config.site_url}fertility" alt="Grow and Blossom - Fertility" title="Grow and Blossom - Fertility"    />
+					<area shape="rect" coords="572,0,641,13" href="{$config.site_url}family" alt="Grow and Blossom - Family" title="Grow and Blossom - Family"    />
+				</map>
+				<img src='images/menu1.png' usemap='#menu1' />
+			</div>
+			<div id='tagline_schedule'>
+				<img src='{$config.image_url}tagline_schedule.png' alt='Grow and Blossom - Schedule' />
+			</div>
+			<div id='content_container_schedule'>
+				<h1>{$title}</h1>
+				<div id="scrollbar_container" style='position:absolute;top:55px;left:424px;'><div id="scrollbar"></div></div>
+				<div id='content_scroller' style='width:400px;float:left'>
+					{$content}
+				</div>
+				<div id='img_schedule'>
+					<img src='{$config.image_url}img_schedule.jpg' alt='Grow and Blossom - Family Yoga' />
+				</div>
+			</div>
+
+		{*
+		{core assign=page method=getContent pageid=home}
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+*}

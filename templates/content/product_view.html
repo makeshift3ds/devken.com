@@ -1,0 +1,106 @@
+{core assign=products method=getTable table=products}
+{core assign=product method=getTable table=products limit='1' list=1 where="id=`$smarty.request.id`"}
+{core assign=product_descriptions method=getTable table=product_descriptions join=products_to_descriptions where="products_to_descriptions.product_id = `$product.id`" join_id='description_id' order='weight asc'}
+{core assign=courses method=getTable table=products_to_categories where="product_id = `$product.id` and category_id = 8" list=1}
+
+<h1>{$product.title}</h1>
+{$product.description}
+
+{if $smarty.request.id != '3'}
+	<p>Price : {$product.price|money_format} &middot;  <span class='red'> PASS Price :{$product.price2|money_format}</span></p>
+	{if !$courses.product_id}
+		<a href='{$config.site_url}cart&mode=add&qty=1&id={$product.id}'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' class='swap' /></a>
+	{/if}
+{/if}
+
+{if $product_descriptions || $smarty.request.id == '3' || $courses.product_id}
+	<div id='product_description_container'>
+		<div id='product_description_tab_container'>
+			{if $smarty.request.id == '3'}
+				<div class='description_tab' scroller='product_description_scroller' target='description001'>Pricing</div>
+			{elseif $courses.product_id}
+				{core assign=events method=getTable table=events join='events_to_products' table_id='product_id' join_id='event_id' where="product_id = `$product.id`"}
+				{if count($events) > 0}
+					<div class='description_tab' scroller='product_description_scroller' target='description001'>Events</div>
+				{/if}
+			{/if}
+
+			{foreach item=d from=$product_descriptions name='product_descriptions'}
+				<div class='description_tab' scroller='product_description_scroller' target='description{$d.id}'>{$d.title}</div>
+			{/foreach}
+		</div>
+		<div id='product_description_scroller'>
+			<div id='description_window_container'>
+				{if $smarty.request.id == '3'}
+					<div class='description_window' id='description001'>
+						<h2>Purchase</h2>
+						<table class='list-table' id='purchase_table'>
+						<tr>
+							<th><a href='{$config.site_url}lightbox/purchase-program' class='iframe_lightbox' lbx='400' lby='350'>Program</a></th>
+							<th><a href='{$config.site_url}lightbox/purchase-contract' class='iframe_lightbox' lbx='400' lby='350'>Contract</a></th>
+							<th><a href='{$config.site_url}lightbox/purchase-initiation' class='iframe_lightbox' lbx='400' lby='350'>Initiation</a></th>
+							<th><a href='{$config.site_url}lightbox/purchase-monthly' class='iframe_lightbox' lbx='400' lby='350'>Monthly</a></th>
+							<th><a href='{$config.site_url}lightbox/purchase-sessions' class='iframe_lightbox' lbx='400' lby='350'>Sessions</a></th>
+							<th><a href='{$config.site_url}lightbox/purchase-add-sessions' class='iframe_lightbox' lbx='400' lby='350'>Add. Sessions</a></th>
+							<th></th>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Platinum</td>	<td style='background-color:#fffbd4;'>No Contract</td>	<td style='background-color:#fffbd4;'>$9,500</td>	<td style='background-color:#fffbd4;'>$0</td>	<td style='background-color:#fffbd4;'>0</td>	<td style='background-color:#fffbd4;'>$5</td>	<td style='background-color:#fffbd4;text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=4'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Gold</td>	<td>2 years</td>	<td>$6,000</td>	<td>$200</td>	<td>0</td>	<td>$5</td>	<td style='text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=5'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						</table>
+						<h2>Lease</h2>
+						<table class='list-table' id='lease_table'>
+						<tr>
+							<th><a href='{$config.site_url}lightbox/lease-program' rel='lightbox'>Program</a></th>
+							<th><a href='{$config.site_url}lightbox/lease-contract'   rel='lightbox'>Contract</a></th>
+							<th><a href='{$config.site_url}lightbox/lease-initiation'  rel='lightbox'>Initiation</a></th>
+							<th><a href='{$config.site_url}lightbox/lease-monthly'  rel='lightbox'>Monthly</a></th>
+							<th><a href='{$config.site_url}lightbox/lease-sessions'  rel='lightbox'>Sessions</a></th>
+							<th><a href='{$config.site_url}lightbox/lease-add-sessions'  rel='lightbox'>Add. Sessions</a></th>
+							<th></th>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Tier 5</td>	<td style='background-color:#fffbd4;'>1 Year</td>	<td style='background-color:#fffbd4;'>$700</td>	<td style='background-color:#fffbd4;'>$899</td>	<td style='background-color:#fffbd4;'>100</td>	<td style='background-color:#fffbd4;'>$20</td>	<td style='background-color:#fffbd4;text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=6'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Tier 4</td>	<td>1 Year</td>	<td>$700</td>	<td>$699</td>	<td>50</td>	<td>$25</td>	<td style='text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=7'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Tier 3</td>	<td>1 Year</td>	<td>$700</td>	<td>$499</td>	<td>30</td>	<td>$25</td>	<td style='text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=8'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Tier 2</td>	<td>1 Year</td>	<td>$700</td>	<td>$399</td>	<td>15</td>	<td>$40</td>	<td style='text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=9'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Tier 1</td>	<td>2 Years</td>	<td>$700</td>	<td>$299</td>	<td>10</td>	<td>$40</td>	<td style='text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=10'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						</table><br />
+						Or <a href='{$config.site_url}find-a-trainer'>find a trainer</a> near you.
+					</div>
+				{elseif $courses.product_id && count($events) > 0}
+					<div class='description_window' id='description001' style='height:auto;'>
+						<table class='list-table'>
+						<tr>
+							<th>Dates</th>	<th>Title</th>	<th>Location</th>	<th>Register</th>
+						</tr>
+						{foreach item=event from=$events}
+							<tr>
+								<td style='background-color:#9baed0;font-weight:bold;'>{$event.start_date|date_format}{if $event.end_date != $event.start_date} - {$event.end_date|date_format}{/if}</td>
+								<td>{$event.title}</td>
+								<td class='list-table-center'>{$event.location}</td>
+								<td class='list-table-center'><a href='{$config.site_url}cart&mode=add&id={$product.id}&event_id={$event.id}&qty=1'><img src='{$config.image_url}btn_buynow.png' alt='Buy Now' title='Buy Now' /></a></td>
+							</tr>
+						{/foreach}
+						</table>
+					</div>
+				{/if}
+				{foreach item=d from=$product_descriptions name='product_descriptions'}
+					<div class='description_window' id='description{$d.id}'>{$d.description}</div>
+				{/foreach}
+			</div>
+		</div>
+	</div>
+{/if}

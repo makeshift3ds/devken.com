@@ -1,0 +1,12 @@
+<!-- 
+	Diese Datei in das Root-Folder der Domain legen, wo die Daten liegen, die vom Flash geholt werden sollen.
+
+Note: A common mistake is to place the policy file on the server on which the Flash movie resides. It must be placed on the server that the Flash movie wishes to access.
+
+-->
+
+<?xml version="1.0"?>
+<cross-domain-policy>
+	<allow-access-from domain="www.nonverbla.de" />
+	<allow-access-from domain="*.nonverbla.de" />
+</cross-domain-policy>

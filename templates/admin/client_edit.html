@@ -1,0 +1,97 @@
+{include file=admin/admin_header.html}
+
+<form method='post' action='{$config.site_url}admin/client_handler.php' />
+{if $smarty.request.id}
+	{* update page *}
+	{core assign=page method=getContent pageid=client_edit}
+	{core assign=tips method=getContent pageid=client_edit_tips}
+	{core assign=data method=getTable table=clients list=1 where="id=`$smarty.request.id`"}
+	<input type='hidden' name='mode' value='update_client' />
+	<input type='hidden' name='data[id]' value='{$smarty.request.id}' />
+{else}
+	{* add page *}
+	{core assign=page method=getContent pageid=client_add}
+	{core assign=tips method=getContent pageid=client_add_tips}
+	<input type='hidden' name='mode' value='insert_client' />
+	<input type='hidden' name='data[active]' value='1' />
+{/if}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+<table class='list-table'>
+<tr>
+	<th>Date Added</th>
+	<td style='font-weight:bold;'>{$data.date_added|date_format}</td>
+</tr>
+<tr>
+	<th>Type</th>
+	<td>
+		{core assign=types method=getCategories table=client_types where='active=1' order='weight asc'}
+		{html_options name=data[type_id] options=$types selected=$data.type_id}
+	</td>
+</tr>
+<tr>
+	<th>Name</th>
+	<td><input type='text' name='data[name]' value='{$data.name}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Address</th>
+	<td><input type='text' name='data[address]' style='width:100%;' value='{$data.address}' /></td>
+</tr>
+<tr>
+	<th>Phone</th>
+	<td><input type='text' name='data[phone]' value='{$data.phone}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Fax</th>
+	<td><input type='text' name='data[fax]' value='{$data.fax}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Email Address</th>
+	<td><input type='text' name='data[email]' value='{$data.email}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Website</th>
+	<td><input type='text' name='data[website]' value='{$data.website}' style='width:100%;' /></td>
+</tr>
+{*
+<tr>
+	<th>Latitude</th>
+	<td><input type='hidden' name='old_lat' value='{$data.lat}' /><input type='text' name='data[lat]' value='{$data.lat}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Longitude</th>
+	<td><input type='hidden' name='old_lng' value='{$data.lng}' /><input type='text' name='data[lng]' value='{$data.lng}' style='width:100%;' /></td>
+</tr>
+*}
+</table>
+<input type='submit' value='submit' />
+</form>
+
+
+{* User Shipping Addresses *}
+{if $config.show_user_shipping}
+	<h2>Shipping Addresses</h2>
+	<table class='list-table'>
+	{core assign=addresses method=getTable table=addresses where="user_id = `$data.id`"}
+	{if !$addresses|count}	{* if no addresses exist for this user *}
+		<tr><td align='center' colspan='2'>No Shipping Information Has Been Saved</td></tr>
+	{else}	{* output a list of addresses *}
+		<tr>
+			<th>Address Title</th>
+			<th>Actions</th>
+		</tr>
+		{foreach item=ad from=$addresses}
+			<tr>
+				<td>
+					{$ad.title}
+				</td>
+				<td style='width:100px;'>
+					<a href='{$config.site_url}admin/address_edit.php?id={$ad.id}'>Edit</a> | <a href='{$config.site_url}admin/address_handler.php?mode=remove&id={$ad.id}'>Delete</a>
+				</td>
+			</tr>
+		{/foreach}
+	{/if}
+	</table>
+{/if}
+{include file=admin/admin_footer.html}

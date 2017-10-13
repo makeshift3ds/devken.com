@@ -1,0 +1,27 @@
+{if !count($articles)}
+ There are no letters at this time.
+{else}
+	{if $article.id}
+		<div id="pagination"><a href="/letters">Back to Articles</a></div>
+		<p />
+		<strong style="font-size: 120%">{$article.title}</strong><br />
+		{$article.date|date_format:"%A, %B %e, %Y"}
+		<p />
+		{$article.text}
+		<p />
+		{if $article.file ne ""}
+			<a href="downloads/{$article.file}"><b>Download Attachment</b></a><p />
+		{/if}
+		<br /><br />
+	{else}
+		<div id="pagination">{$pages}</div>
+		{foreach item=doc from=$articles}
+			<p>
+			<a href="letters&id={$doc.id}" title="View {$doc.title}" style="font-weight: bold;">{$doc.title}</a><br /><strong>{$doc.date|date_format:"%A, %B %e, %Y"}</strong><br />
+			{$doc.text|strip_tags|truncate:200:'..'}
+			</p>
+		{/foreach}
+	<div id="pagination_bottom">{$pages}</div>
+	{/if}
+
+{/if}

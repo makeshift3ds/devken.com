@@ -1,0 +1,61 @@
+{include file=admin/admin_header.html}
+
+<form method='post' action='{$config.site_url}admin/address_handler.php' />
+{if $smarty.request.id}
+	{* update page *}
+	{core assign=page method=getContent pageid=address_edit}
+	{core assign=tips method=getContent pageid=address_edit_tips}
+	{core assign=data method=getTable table=addresses list=1 where="id=`$smarty.request.id`"}
+	<input type='hidden' name='mode' value='update_address' />
+	<input type='hidden' name='data[id]' value='{$smarty.request.id}' />
+{else}
+	{* add page *}
+	{core assign=page method=getContent pageid=address_add}
+	{core assign=tips method=getContent pageid=address_add_tips}
+	{if $smarty.request.id}<input type='hidden' name='date[user_id]' value='{$smarty.request.id}' />{/if}
+	<input type='hidden' name='mode' value='insert_address' />
+{/if}
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+<table class='list-table'>
+<tr>
+	<th>Date Added</th>
+	<td><input type='text' name='data[date_added]' value='{$data.date_added}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Title</th>
+	<td><input type='text' name='data[title]' value='{$data.title}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Address</th>
+	<td><input type='text' name='data[address]' value='{$data.address}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>City</th>
+	<td><input type='text' name='data[city]' value='{$data.city}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>State</th>
+	<td><input type='text' name='data[state]' value='{$data.state}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Zip</th>
+	<td><input type='text' name='data[zip]' value='{$data.zip}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Country</th>
+	<td><input type='text' name='data[country]' value='{$data.country}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Phone</th>
+	<td><input type='text' name='data[phone]' value='{$data.phone}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Comments</th>
+	<td><textarea name='date[comments]' style='width:100%;height:125px;'>{$data.comments}</textarea></td>
+</tr>
+</table>
+<input type='submit' value='submit' />
+</form>
+
+{include file=admin/admin_footer.html}

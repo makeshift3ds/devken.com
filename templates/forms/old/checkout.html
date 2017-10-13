@@ -1,0 +1,109 @@
+<div class='user_error'><p>Current this page is automatically generating test credit card numbers and interacting with the test merchant server. These will be turned on and tested before going live.</p></div>
+<link rel="stylesheet"  type="text/css" href="{$config.site_url}assets/registration.css" />
+<form method='post' action='{$config.site_url}checkout' id='checkout' onsubmit='return checkOut();'>
+	<input type='hidden' name='mode' value='preview_checkout' />
+	{if $smarty.request.debug == 'checkout'}<input type='hidden' name='debug' value='checkout' />{/if}
+		<ul >
+			<li>
+			<label class="description">Payment Information </label>
+				<div class="left">
+					<input id="firstName" name="data[firstName]" class="element text medium" type="text" maxlength="255" value="{$checkout_info.firstName|default:$account_info.firstname}"/>
+					<label class='required'>First Name</label>
+				</div>
+				<div class="right">
+					<input id="lastName" name="data[lastName]" class="element text medium" type="text" maxlength="255" value="{$checkout_info.lastName|default:$account_info.lastname}"/>
+					<label class='required'>Last Name</label>
+				</div>
+				<div class="left">
+					<select class="element select medium" id='creditCardType' name='data[creditCardType]'>
+						<option value="Visa" selected="selected">Visa</option>
+						<option value="MasterCard">MasterCard</option>
+						<option value="Discover">Discover</option>
+						<option value="Amex">American Express</option>
+					</select>
+					<label class='required'>Card Type</label>
+				</div>
+				<div class="right">
+					{commerce assign=cc method=createCC}	{* TESTING *}
+					<input id="creditCardNumber" name="data[creditCardNumber]" class="element text medium" type="text" maxlength="255"{if $smarty.request.debug == 'checkout'}value='{$cc}'{/if} />
+					<label class='required'>Credit Card Number</label>
+				</div>
+				<div class="left">
+					{html_select_date prefix='expDate' end_year='+10' display_days='0' class='element select smallmedium'}
+					<label class='required'>Expiration Date</label>
+				</div>
+				<div class="right">
+					<input id="cvv2Number" name="data[cvv2Number]" class="element text small" type="text" maxlength="255"{if $smarty.request.debug == 'checkout'}value='962'{/if} />
+					<label class='required'>Credit Card Verification Number</label>
+				</div>
+			</li>
+			<li>
+			<label class="description">Billing Address</label>
+				<div>
+					<input id="address" name="data[address]" class="element text large" value="{$checkout_info.address}" type="text">
+					<label class='required' >Street Address</label>
+				</div>
+				<div>
+					<input id="address2" name="data[address2]" class="element text large" value="{$checkout_info.address2}" type="text">
+					<label>Address Line 2</label>
+				</div>
+				<div class="left">
+					<input id="city" name="data[city]" class="element text medium" value="{$checkout_info.city}" type="text">
+					<label class='required'>City</label>
+				</div>
+				<div class="right">
+					<input id="state" name="data[state]" class="element text medium" value="{$checkout_info.state}" type="text">
+					<label class='required'>State / Province / Region</label>
+				</div>
+				<div class="left">
+					<input id="zip" name="data[zip]" class="element text medium" maxlength="15" value="{$checkout_info.zip}" type="text">
+					<label class='required'>Postal / Zip Code</label>
+				</div>
+				<div class="right">
+						{core assign=countries method=getCategories table=countries}
+						{html_options id='country' options=$countries name=data[country] class='element select medium' selected=$checkout_info.country|default:'US'}
+				<label class='required'>Country</label>
+			</div>
+		</li>
+			<li>
+			{assign var=user_id value=$account_info.id}
+			{core assign=shipping_info method=getTable table=addresses where="user_id=$user_id and default_address=1" list=1}
+			<label class="description">Shipping Address</label>
+				<div>
+					<input id="shipping_address" name="data[shipping_address]" class="element text large" value="{$checkout_info.shipping_address|default:$shipping_info.address}" type="text">
+					<label class='required'>Street Address</label>
+				</div>
+				<div>
+					<input id="shipping_address2" name="data[shipping_address2]" class="element text large" value="{$checkout_info.shipping_address2|default:$shipping_info.address2}" type="text">
+					<label>Address Line 2</label>
+				</div>
+				<div class="left">
+					<input id="shipping_city" name="data[shipping_city]" class="element text medium" value="{$checkout_info.shipping_city|default:$shipping_info.city}" type="text">
+					<label class='required'>City</label>
+				</div>
+				<div class="right">
+					<input id="shipping_state" name="data[shipping_state]" class="element text medium" value="{$checkout_info.shipping_state|default:$shipping_info.state}" type="text">
+					<label class='required' >State / Province / Region</label>
+				</div>
+				<div class="left">
+					<input id="shipping_phone" name="data[shipping_phone]" class="element text medium" value="{$checkout_info.shipping_phone|default:$shipping_info.phone}" type="text">
+					<label class='required'>Phone</label>
+				</div>
+				<div class="right">
+					<input id="shipping_fax" name="data[shipping_fax]" class="element text medium" value="{$checkout_info.shipping_fax|default:$shipping_info.fax}" type="text">
+					<label>Fax</label>
+				</div>
+				<div class="left">
+					<input id="shipping_zip" name="data[shipping_zip]" class="element text medium" maxlength="15" value="{$checkout_info.shipping_zip|default:$shipping_info.zip}" type="text">
+					<label class='required' >Postal / Zip Code</label>
+				</div>
+				<div class="right">
+						{html_options id='shipping_country' options=$countries name=data[shipping_country] class='element select medium' selected=$checkout_info.shipping_country|default:'US'}
+				<label class='required'>Country</label>
+			</div>
+		</li>
+		<li>
+				<input type='image' src='{$config.image_url}btn_preview_order.png' class='swap' />
+		</li>
+	</ul>
+</form>

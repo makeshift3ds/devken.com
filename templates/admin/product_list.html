@@ -1,0 +1,101 @@
+{include file=admin/admin_header.html}
+
+ {* get the main content *}
+{core assign=page method=getContent pageid=product_list}
+ {* get the tip content (footer checks for $tip) *}
+{core assign=tips method=getContent pageid=product_list_tips}
+ {* get a list from the table using a join *}
+ {if $smarty.request.id}
+ 	{if $smarty.request.id == 'na'}	{* products without a category *}
+
+		{core
+			assign=pages
+			method=getTable
+			table=products
+			limit=$config.admin_product_limit|default:10
+			page=$smarty.request.page|default:1
+			where="id not in (select distinct product_id from products_to_categories)"
+			order='weight asc'
+		}
+
+		{* get the pagination information *}
+		{core
+			assign=pagination
+			method=getPagination
+			table=products
+			limit=$config.admin_product_limit|default:10
+			page=$smarty.request.page|default:1
+			where="id not in (select distinct product_id from products_to_categories)"
+		}
+ 	{else}
+		{core
+			assign=pages
+			method=getTable
+			table=products
+			join=products_to_categories
+			limit=$config.admin_product_limit|default:10
+			page=$smarty.request.page|default:1
+			where="products_to_categories.category_id = `$smarty.request.id` and products.active=1"
+			join_id=product_id
+			order='weight asc'
+		}
+
+		{* get the pagination information *}
+		{core
+			assign=pagination
+			method=getPagination
+			table=products
+			join=products_to_categories
+			limit=$config.admin_product_limit|default:10
+			page=$smarty.request.page|default:1
+			join_id=product_id
+		}
+	{/if}
+{else}
+	{core assign=pages method=getTable table=products where='active=1' order='weight asc' limit=$config.admin_product_limit|default:10 page=$smarty.request.page|default:1}
+	{core assign=pagination method=getPagination table=products limit=$config.admin_product_limit|default:10 page=$smarty.request.page|default:1}
+{/if}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+
+{if $pagination.pages > 1}
+	{* only show pagination if there is more than one page *}
+	<div class='list-table-pagination'>
+		<div class='prev'><a href='{$config.site_url}admin/product_list.php?page={$pagination.prev}'>Prev</a></div>
+		<div class='pages'>Page {$smarty.request.page|default:1} of {$pagination.pages}</div>
+		<div class='next'><a href='{$config.site_url}admin/product_list.php?page={$pagination.next}'>Next</a></div>
+	</div>
+{/if}
+
+<form method='post' action='{$config.site_url}admin/product_handler.php'>
+<input type='hidden' name='mode' value='order_products' />
+<input type='hidden' name='id' value='{$smarty.request.id}' />
+<table class='list-table'>
+<tr>
+	<th>Title</th>
+	<th style='width:100px;'>Weight</th>
+	<th style='width:100px;'>Actions</th>
+</tr>
+	{if count($pages)}
+		{foreach item=t from=$pages}
+		<tr>
+			<td><a href='{$config.site_url}leathers/{$t.id}/{$t.title|urlencode}.html'>{$t.title}</a></td>
+			<td style='width:100px;'><input type='text' name='weights[]' value='{$t.weight}' class='weight_input' /> <input type='hidden' name='ids[]' value='{$t.id}' /></td>
+			<td><a href='{$config.site_url}admin/product_edit.php?id={$t.id}'>Edit</a> :
+					<a href='{$config.site_url}admin/product_handler.php?mode=remove_product&id={$t.id}'>Delete</a>
+			</td>
+		</tr>
+		{/foreach}
+	{else}
+		<tr>
+			<td colspan='3'>
+				No Products Found
+			</td>
+		</tr>
+	{/if}
+</table>
+<input type='submit' value='submit' />
+</form>
+
+{include file=admin/admin_footer.html}

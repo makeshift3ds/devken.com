@@ -1,0 +1,29 @@
+{core assign=video method=getTable table=media where="id = `$smarty.request.id`" list=1}
+	<html><head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="{$config.site_url}assets/plugins/flowplayer/flowplayer-3.2.2.min.js"></script>
+		<title>{$video.title}</title>
+	</head><body>
+	<div id="mediaplayer">
+			{if $video.download}
+			<a
+			 href="{$config.site_url}downloads/{$video.download}"
+			style="display:block;width:520px;height:330px"
+			id="player">
+		</a>
+		<script>
+			$f("player", "{$config.site_url}assets/plugins/flowplayer/flowplayer-3.2.2.swf",
+				{literal}
+					{
+						clip: {
+							width: '100px'
+						}
+					}
+				{/literal}
+			);
+		</script>
+			{else}
+				 {$video.link}
+			{/if}
+	</div>
+</body></html>

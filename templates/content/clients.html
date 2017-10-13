@@ -1,0 +1,13 @@
+	<input type='hidden' id='type_id' name='type_id' value='{$type_id|default:''}' />
+	<div id='clients_form'>
+		<strong>Postal Code:</strong> <input type="text" id="addressInput"/>
+		<strong>Distance:</strong> <select id="radiusSelect">
+		  <option value="20000" selected>All</option>
+		  <option value="25">25</option>
+		  <option value="100">100</option>
+		  <option value="200">200</option>
+		</select>
+		<input type="button" onclick="searchLocations()" value="Search Locations" id='client_map_button' />
+    </div>
+    <div id="clients_sidebar" style=""></div>
+	<div id="clients_map" style=""></div>

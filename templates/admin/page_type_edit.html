@@ -1,0 +1,29 @@
+{include file=admin/admin_header.html}
+
+<form method='post' action='{$config.site_url}admin/page_handler.php' />
+{if $smarty.request.id}
+	{* update page *}
+	{core assign=page method=getContent pageid=page_type_add}
+	{core assign=tips method=getContent pageid=page_type_add_tips}
+	{core assign=data method=getTable table=page_types list=1 where="id=`$smarty.request.id`"}
+	<input type='hidden' name='mode' value='update_page_type' />
+	<input type='hidden' name='data[id]' value='{$smarty.request.id}' />
+{else}
+	{* add page *}
+	{core assign=page method=getContent pageid=page_type_add}
+	{core assign=tips method=getContent pageid=page_type_add_tips}
+	<input type='hidden' name='mode' value='insert_page_type' />
+{/if}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+<table class='list-table'>
+<tr>
+	<th>Title</th>
+	<td><input type='text' name='data[title]' value='{$data.title}' style='width:100%;' /></td>
+</tr>
+</table>
+<input type='submit' value='submit' />
+</form>
+
+{include file=admin/admin_footer.html}

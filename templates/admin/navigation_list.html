@@ -1,0 +1,81 @@
+{include file=admin/admin_header.html}
+
+ {* get the main content *}
+{core assign=page method=getContent pageid=navigation_list}
+ {* get the tip content (footer checks for $tip) *}
+{core assign=tips method=getContent pageid=navigation_list_tips}
+ {* get a list from the pages table *}
+{core assign=navigation method=getTable table=navigation where='parent_id is null and active=1' order='weight asc'}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+
+<div id='default-carousel'>
+	<div class="cycle-carousel">
+		<ul class="tab-nav">
+			{foreach item=parent from=$navigation name=parents}
+					<li><a href="#navigation-tab{$parent.id}" class="active tab" title="1">{$parent.title}</a></li>
+			{/foreach}
+		</ul>
+		<div class="tabs-holder">
+			<ol class="tabs">
+				{foreach item=parent from=$navigation name=parents}
+					{core assign=children method=getTable table=navigation where="parent_id = `$parent.id`" order='weight asc'}
+					<li class="admin_tab" id="navigation-tab{$d.id}" style='min-height:300px;'>
+						<form method='post' action='{$config.site_url}admin/navigation_handler.php' />
+						<input type='hidden' name='mode' value='order_navigation' />
+						<table class='list-table'>
+						<tr>
+							<th>Title</th>
+							<th style='width:30px;text-align:center;'>Weight</th>
+							<th style='width:160px;text-align:center;'>Actions</th>
+						</tr>
+							{core assign=children method=getTable table=navigation where="parent_id = `$parent.id`" order='weight asc'}
+							{foreach item=t from=$children}
+							<tr{if $t.active != 1} class='inactive'{/if}>
+								<td>{$t.title}</td>
+								<td><input type='hidden' name='ids[]' value='{$t.id}' /><input type='text' name='weights[]' value='{$t.weight}' class='weight_input' /></td>
+								<td style='text-align:right;'><a href='{$config.site_url}admin/navigation_edit.php?id={$t.id}'>Edit</a> : <a href='{$config.site_url}admin/navigation_handler.php?mode=remove_navigation&id={$t.id}'>Delete</a> : {if $t.active == 1}<a href='{$config.site_url}admin/navigation_handler.php?mode=deactivate_navigation&id={$t.id}'>Deactivate</a>{else}<a href='{$config.site_url}admin/navigation_handler.php?mode=activate_navigation&id={$t.id}'>Activate</a>{/if}</td>
+							</tr>
+							{/foreach}
+							{if !count($children)}
+								<tr>
+									<td colspan='3' align='center'>No Navigation Links Set</td>
+								</tr>
+							{/if}
+						</table>
+						<input type='submit' value='update order' />
+						</form>
+					</li>
+				{/foreach}
+			</ol>
+		</div>
+	</div>
+</div>
+
+{*
+{foreach item=parent from=$navigation name=parents}
+
+	<div class='toggle' target='children_{$parent.id}'>{$parent.title}</div>
+
+	<div id='children_{$parent.id}' style='display:none;'>
+		<table class='list-table'>
+		<tr>
+			<th>Title</th>
+			<th style='width:30px;text-align:center;'>Weight</th>
+			<th style='width:160px;text-align:center;'>Actions</th>
+		</tr>
+			{core assign=children method=getTable table=navigation where="parent_id = `$parent.id`" order='weight asc'}
+			{foreach item=t from=$children}
+			<tr{if $t.active != 1} class='inactive'{/if}>
+				<td>{$t.title}</td>
+				<td><input type='hidden' name='ids[]' value='{$t.id}' /><input type='text' name='weights[]' value='{$t.weight}' class='weight_input' /></td>
+				<td style='text-align:right;'><a href='{$config.site_url}admin/navigation_edit.php?id={$t.id}'>Edit</a> : <a href='{$config.site_url}admin/navigation_handler.php?mode=remove_navigation&id={$t.id}'>Delete</a> : {if $t.active == 1}<a href='{$config.site_url}admin/navigation_handler.php?mode=deactivate_navigation&id={$t.id}'>Deactivate</a>{else}<a href='{$config.site_url}admin/navigation_handler.php?mode=activate_navigation&id={$t.id}'>Activate</a>{/if}</td>
+			</tr>
+			{/foreach}
+		</table>
+	</div>
+{/foreach}
+*}
+
+{include file=admin/admin_footer.html}

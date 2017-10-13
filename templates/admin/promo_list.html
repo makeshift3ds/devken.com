@@ -1,0 +1,45 @@
+{include file=admin/admin_header.html}
+
+ {* get the main content *}
+{core assign=page method=getContent pageid=promo_list}
+ {* get the tip content (footer checks for $tip) *}
+{core assign=tips method=getContent pageid=promo_list_tips}
+ {* get a list from the pages table *}
+{core assign=pages method=getTable table=promos limit=$config.admin_promo_limit|default:10  page=$smarty.request.page|default:1}
+ {* get the pagination information *}
+{core assign=pagination method=getPagination table=promos limit=$config.admin_promo_limit|default:10 page=$smarty.request.page|default:1}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+
+{if $pagination.pages > 1}
+	{* only show pagination if there is more than one page *}
+	<div class='list-table-pagination'>
+		<div class='prev'><a href='{$config.site_url}admin/promo_list.php?page={$pagination.prev}'>Prev</a></div>
+		<div class='pages'>Page {$smarty.request.page|default:1} of {$pagination.pages}</div>
+		<div class='next'><a href='{$config.site_url}admin/promo_list.php?page={$pagination.next}'>Next</a></div>
+	</div>
+{/if}
+
+<form method='post' action='{$config.site_url}admin/product_handler.php'>
+<input type='hidden' name='mode' value='order_promos' />
+<table class='list-table'>
+<tr>
+	<th>Title</th>
+	<th style='width:100px;'>Weight</th>
+	<th style='width:100px;'>Actions</th>
+</tr>
+	{foreach item=t from=$pages}
+	<tr>
+		<td>{$t.title}</td>
+		<td style='width:100px;'><input type='text' name='weights[]' value='{$t.weight}' class='weight_input' /> <input type='hidden' name='ids[]' value='{$t.id}' /></td>
+		<td><a href='{$config.site_url}admin/promo_edit.php?id={$t.id}'>Edit</a> :
+				<a href='{$config.site_url}admin/promo_handler.php?mode=remove_promo&id={$t.id}'>Delete</a>
+		</td>
+	</tr>
+	{/foreach}
+</table>
+<input type='submit' value='submit' />
+</form>
+
+{include file=admin/admin_footer.html}

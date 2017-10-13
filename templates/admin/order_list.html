@@ -1,0 +1,77 @@
+{include file=admin/admin_header.html}
+
+ {* get the main content *}
+{core assign=page method=getContent pageid=order_list}
+ {* get the tip content (footer checks for $tip) *}
+{core assign=tips method=getContent pageid=order_list_tips}
+ {* get a list from the pages table *}
+{core assign=pages method=getTable table=orders limit=$config.admin_order_limit|default:10  page=$smarty.request.page|default:1 order='date_added desc, user_id desc' where='active=1'}
+ {* get the pagination information *}
+{core assign=pagination method=getPagination table=orders limit=$config.admin_order_limit|default:10 page=$smarty.request.page|default:1 where='active=1'}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+
+{if $pagination.pages > 1}
+	{* only show pagination if there is more than one page *}
+	<div class='list-table-pagination'>
+		<div class='prev'><a href='{$config.site_url}admin/order_list.php?page={$pagination.prev}'>Prev</a></div>
+		<div class='pages'>Page {$smarty.request.page|default:1} of {$pagination.pages}</div>
+		<div class='next'><a href='{$config.site_url}admin/order_list.php?page={$pagination.next}'>Next</a></div>
+	</div>
+{/if}
+
+<table class='list-table'>
+<tr>
+	<th>Date Added</th>
+	<th style='width:100px;'>User</th>
+	<th style='width:50px;'>Items</th>
+	<th style='width:60px;'>Total</th>
+	<th style='width:100px;'>Status</th>
+	<th style='width:100px;'>Actions</th>
+</tr>
+{if count($pages)}
+	{foreach item=t from=$pages}
+		{core assign=user method=getTable table=users where="id=`$t.user_id`" limit='1' list='1'}
+		{if $t.status == '1' || $t.status == ''}	{*Received *}
+			<tr style='background-color:#f3ddd4;'>
+		{elseif $t.status == '2'}	{*Processed *}
+			<tr style='background-color:#d4f3d9;'>
+		{elseif $t.status == '3'}	{*Shipped *}
+			<tr style='background-color:#feffdf;'>
+		{elseif $t.status == '4'}	{* Canceled *}
+			<tr style='background-color:#d4e5f3;'>
+		{/if}
+			<td>{$t.date_added|date_format:'%m/%d/%Y'}</td>
+			<td><a href='{$config.site_url}admin/user_edit.php?id={$user.id}'>{$user.username}</a></td>
+			<td>{$t.items}</td>
+			<td>{$t.total|money_format}</td>
+			<td>
+					<form method='post' action='{$config.site_url}admin/order_handler.php'>
+						{core assign=status method=getCategories table=order_status_types order='id asc'}
+						<input type='hidden' name='mode' value='update_order_status' />
+						<input type='hidden' name='data[id]' value='{$t.id}' />
+						{html_options name=data[status] options=$status selected=$t.status onchange="this.form.submit();"}
+					</form>
+			</td>
+			<td>
+					{if $config.show_order_edit}
+						<a href='{$config.site_url}admin/order_edit.php?id={$t.id}'>Edit</a> :
+					{/if}
+					{if $config.show_order_to_cart}
+						<a href='{$config.site_url}admin/order_view.php?id={$t.id}'>View</a> :
+					{/if}
+					{if $config.show_order_delete}
+						<a href='{$config.site_url}admin/order_handler.php?mode=remove_order&id={$t.id}'>Delete</a>
+					{/if}
+			</td>
+		</tr>
+	{/foreach}
+{else}
+	<tr>
+		<td colspan='9'>There are No Pending Orders</td>
+	</tr>
+{/if}
+</table>
+
+{include file=admin/admin_footer.html}

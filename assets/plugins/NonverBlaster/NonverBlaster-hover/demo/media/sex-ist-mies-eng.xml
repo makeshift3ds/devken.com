@@ -1,0 +1,29 @@
+<tt>
+  <head>
+    <layout/>
+  </head>
+  <body>
+    <div id="captions">
+      <p begin="0.01" end="2.5">»Sex is lousy« is fighting sex.</p>
+      <p begin="3.4" end="5.16">»Sex is lousy« warns:</p>
+      <p begin="5.17" end="9.2">
+        Many young girls went to a dancing place
+        <br/>
+        with a man already
+      </p>
+      <p begin="9.5" end="12.5">and had a broken heart afterwards.</p>
+      <p begin="13.13" end="16.14">
+        Therefore avoid the beat!
+        <br/>
+        Stay away from the beat!
+      </p>
+      <p begin="16.6" end="19.12">
+        Because beat is lousy
+        <br/>
+        and sex is lousy.
+      </p>
+      <p begin="20.02" end="22.04">Sex is particularly dangerous,</p>
+      <p begin="22.1" end="25.09">if it co-occurs with beat music.</p>
+    </div>
+  </body>
+</tt>

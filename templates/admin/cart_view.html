@@ -1,0 +1,85 @@
+{include file=admin/admin_header.html}
+
+{core assign=page method=getContent pageid=cart_view}
+{core assign=tips method=getContent pageid=cart_view_tips}
+{core assign=data method=getTable table=carts list=1 where="id=`$smarty.request.id`"}
+{assign var=cart value=$data.contents|unserialize}
+
+{core assign=order method=getTable table=orders list=1 where="id=`$smarty.request.order_id`"}
+{core assign=user method=getTable table=users list=1 where="id=`$smarty.request.user_id`"}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+
+<table class='list-table'>
+	<tr>
+		<th>Image</th>
+		<th>Description</th>
+	</tr>
+	{foreach item=c from=$cart name=cart}
+		{if $c.id != ''}
+			{core assign=p method=getTable table=products where="id = `$c.id`" list=1}
+			{core assign=img method=getTable table=product_images where="id = `$c.image_id`" list=1}
+			<tr>
+				<td align='center' style='padding-left:20px;width:65px;'><img src='{$config.image_url}product_images/thumb/{$img.filename}' alt='' title='' /></td>
+				<td valign='top'><strong>{$p.title}</strong> <br /> {$img.title}</td>
+			</tr>
+		{/if}
+	{/foreach}
+	{if !$c}
+		<tr>
+			<td colspan='2' style='text-align:center;'>
+				This cart is empty
+			</td>
+		</tr>
+	{/if}
+</table>
+
+<table class='list-table'>
+<tr>
+	<th colspan='2'>
+		Shipping Information
+	</th>
+</tr>
+<tr>
+	<td style='width:100px;'>
+	 	Name:
+	 </td>
+	 <td>
+	 	{$user.firstname}
+	 </td>
+</tr>
+<tr>
+	<td style='width:100px;'>
+	 Company:
+	 </td>
+	 <td>
+	 		{$user.lastname}
+	 	 </td>
+</tr>
+<tr>
+	<td style='width:100px;'>
+	 Address:
+	 </td>
+	 <td>
+	 		{$order.shipping_address}
+	 	 </td>
+</tr>
+<tr>
+	<td style='width:100px;'>
+	 Phone:
+	 </td>
+	 <td>
+	 		{$user.phone}
+	 	 </td>
+</tr>
+<tr>
+	<td style='width:100px;'>
+	 Email:
+	 </td>
+	 <td>
+	 		{$user.email}
+	 </td>
+</tr>
+</table>
+{include file=admin/admin_footer.html}

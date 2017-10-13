@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Core>
+  <timestamp>11:09:01:16:10:14</timestamp>
+  <__construct><cart_name>1</cart_name></__construct>
+  <setCart><cart_name></cart_name></setCart>
+  <updateItem><id></id><attribs></attribs></updateItem>
+  <clearCart></clearCart>
+  <addItem><attribs></attribs></addItem>
+  <removeItem><arrayIndex></arrayIndex></removeItem>
+  <updateCart></updateCart>
+  <getCart></getCart>
+  <dumpCart></dumpCart>
+  <isEmpty></isEmpty>
+  <itemCount></itemCount>
+  <uniqueItemCount></uniqueItemCount>
+  <getSerialized></getSerialized>
+</Core>

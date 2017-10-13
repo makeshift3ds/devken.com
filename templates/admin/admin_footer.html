@@ -1,0 +1,40 @@
+	</div>
+	<div id='content_right'>
+
+	<h2>QuickLinks</h2>
+	<div class='widget'>
+		<ul class='admin_quicklinks'>
+			<li><a href='{$config.site_url}admin/index.php' id='admin_home_link'>Admin Home</a></li>
+			{if $page.admin_page}
+				<li><a href='{$page.admin_page}' id='admin_content_link'>{$page.admin_page_title|default:'Content'}</a></li>
+			{/if}
+		</ul>
+	</div>
+
+	{if $smarty.session.super_user}
+		<h2>SuperUser</h2>
+		<div class='widget'>
+			<ul class='admin_quicklinks'>
+				<li><a href='{$config.site_url}admin/page_edit.php?id={$page.id}' id='admin_edit_page'>Edit Page</a></li>
+				<li><a href='{$config.site_url}admin/page_edit.php?id={$tips.id}'id='admin_edit_tips'>Edit Tips</a></li>
+			</ul>
+		</div>
+	{/if}
+
+	{if $tips}
+		<h2>{$tips.title}</a></h2>
+		<div class='widget'>
+			<p>
+				{$tips.content}
+			</p>
+		</div>
+	{/if}
+	</div>
+	<div id='footer'>
+		&copy; Copyright {$smarty.now|date_format:"%Y"} &middot; Demo Website
+	</div>
+</div>
+{if $smarty.request.debug == 'smarty'}{debug}{/if}
+</body>
+</html>
+{if $smarty.request.debug == 'benchmark' && $smarty.session.super_user == 1}{core method='displayBenchmark'}{/if}

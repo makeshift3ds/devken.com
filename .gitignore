@@ -1,0 +1,9 @@
+conf/config.ini
+*.DS_Store
+logs/*
+templates_c/*
+tmp/*
+universal_password.php
+demos/*
+admin/tmp/*
+git-pull.php

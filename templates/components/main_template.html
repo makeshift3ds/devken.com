@@ -1,0 +1,15 @@
+
+<div id='container'>
+
+	{* Add $Smarty->assign('no_header',1); to the callback file to disable this content *}
+
+	{if !$no_header}
+		{core assign=home_content method=getContent pageid=$path}
+		{if $home_content.active == 1}
+			<h1>{$home_content.title}</h1>
+			{$home_content.content}
+		{else}
+			<h1>Aww Snap!</h1>
+			<p>The page you were looking for was not found</p>
+		{/if}
+	{/if}

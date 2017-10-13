@@ -1,0 +1,75 @@
+{core assign=data method=getTable table=orders list=1 where="id=`$smarty.request.id` and user_id = `$account_info.id`"}
+{core assign=user method=getTable table=users where="id=`$data.user_id`" list=1}
+{assign var=order value=$data.cart|unserialize}
+
+<div id='order_view_header'>
+	<div id='order_view_left'>
+		<h2>Order #{$data.id}</h2>
+		<div>
+			{$data.description}
+		</div>
+	</div>
+	<div id='order_view_right'>
+		<h2>Shipping Information</h2>
+		<div>
+			{$user.firstname} {$user.lastname}<br />
+			{$user.email}<br />
+			{$data.shipping_address}
+		</div>
+	</div>
+	<br clear='all' />
+</div>
+<div id='order_view_cart'>
+	<table class='list-table' id='cart-table'>
+	<tr>
+		<th style='width:463px;'>Description</th>
+		<th style='width:54px;text-align:center;'>Qty</th>
+		<th style='width:75px;text-align:center;'>Each</th>
+		<th style='text-align:center;'>Item Total</th>
+	</tr>
+	{foreach item=c from=$order name=cart key=key}
+		{if $c.id != ''}
+			<tr>
+				<td>
+					<div style='position:relative;'>
+						{if $c.parent_id}
+							<strong><a href='{$config.site_url}products&id={$c.parent_id}'>{$c.title}</a></strong><br />
+						{else}
+							<strong><a href='{$config.site_url}products&id={$c.id}'>{$c.title}</a></strong><br />
+						{/if}
+					</div>
+				</td>
+				<td class='list-table-center'>{$c.qty}</td>
+				{if ($user.type_id == 1 || $user.type_id == 3) && $c.price != $c.price2}
+					<td class='list-table-center'><strike><small>{$c.price|money_format}</small></strike><br /><strong class='red'>{$c.price2|money_format}</strong></td>
+					<td class='list-table-center'><strike><small>{$c.price*$c.qty|money_format}</small></strike><br /><strong class='red'>{$c.price2*$c.qty|money_format}</strong></td>
+				{else}
+					<td class='list-table-center'>{$c.price|money_format}</td>
+					<td class='list-table-center'>{$c.price*$c.qty|money_format}</td>
+				{/if}
+			</tr>
+		{/if}
+	{/foreach}
+	{if !$c}
+		<tr>
+			<td colspan='4' style='text-align:center;'>
+				This order is empty
+			</td>
+		</tr>
+	{/if}
+	</table>
+	<div id='cart_footer_left'>
+		<small>You are viewing a snapshot of the shopping cart when the order was placed. Price changes are not reflected here.</small>
+	</div>
+	<div id='cart_footer_right'>
+		<table cellpadding='0' cellspacing='0' border='0' id='cart_totals'>
+			<tr><th>Subtotal :</th><td>{$data.subtotal|money_format}</td></tr>
+			{if $data.discount > 0}<tr><th class='red'>PASS Discount :</th><td class='red'>-{$data.discount|money_format}</td></tr>{/if}
+			<tr><th>Tax :</th><td>{$data.tax|money_format}</td></tr>
+			<tr><th>Shipping :</th><td>{$data.shipping|money_format}</td></tr>
+			<tr><th>Total :</th><td>{$data.total|money_format}</td></tr>
+			</tr>
+		</table>
+		<br clear='all' />
+	</div>
+</div>

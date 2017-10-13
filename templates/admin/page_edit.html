@@ -1,0 +1,51 @@
+{include file=admin/admin_header.html}
+
+<form method='post' action='{$config.site_url}admin/page_handler.php' />
+{if $smarty.request.id}
+	{* update page *}
+	{core assign=page method=getContent pageid=page_edit}
+	{core assign=tips method=getContent pageid=page_edit_tips}
+	{core assign=data method=getContent pageid=$smarty.request.id}
+	<input type='hidden' name='mode' value='update_page' />
+	<input type='hidden' name='data[id]' value='{$smarty.request.id}' />
+	<input type='hidden' name='data[type_id]' value='{$data.type_id}' />
+{else}
+	{* add page *}
+	{core assign=page method=getContent pageid=page_add}
+	{core assign=tips method=getContent pageid=page_add_tips}
+	<input type='hidden' name='mode' value='insert_page' />
+	<input type='hidden' name='data[type_id]' value='1' />
+	<input type='hidden' name='data[active]' value='1' />
+{/if}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+<table class='list-table'>
+<tr>
+	<th>Page Type</th>
+	<td>
+		{core assign=cats method=getCategories table=page_types order='id asc' where='id = 1'}
+		{html_options name=data[type_id] options=$cats selected=$data.cat_id}
+	</td>
+</tr>
+<tr>
+	<th>Meta Description</th>
+	<td><input type='text' name='data[meta_description]' value='{$data.meta_description}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Meta Keywords</th>
+	<td><input type='text' name='data[meta_keywords]' value='{$data.meta_keywords}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Title</th>
+	<td><input type='text' name='data[title]' value='{$data.title}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Content</th>
+	<td><textarea name='data[content]' id='wysiwyg' style='width:100%;height:250px;'>{$data.content}</textarea></td>
+</tr>
+</table>
+<input type='submit' value='submit' />
+</form>
+
+{include file=admin/admin_footer.html}

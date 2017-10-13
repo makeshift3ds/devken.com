@@ -1,0 +1,239 @@
+{core assign=products method=getTable table=products}
+{core assign=product method=getTable table=products limit='1' list=1 where="id=`$smarty.request.id`"}
+{core assign=product_descriptions method=getTable table=product_descriptions join=products_to_descriptions where="products_to_descriptions.product_id = `$product.id`" join_id='description_id' order='weight asc'}
+{core assign=courses method=getTable table=products_to_categories where="product_id = `$product.id` and category_id = 8" list=1}
+
+<h1>{$product.title}</h1>
+{$product.description}
+
+{if $smarty.request.id != '3'}
+	<p>Price : {$product.price|money_format} &middot;  <span class='red'> PASS Price :{$product.price2|money_format}</span></p>
+	{if !$courses.product_id}
+		<a href='{$config.site_url}cart&mode=add&qty=1&id={$product.id}'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' class='swap' /></a>
+	{/if}
+{/if}
+
+{if $product_descriptions || $smarty.request.id == '3' || $courses.product_id}
+	<div id='product_description_container'>
+		<div id='product_description_tab_container'>
+			{if $smarty.request.id == '3'}
+				<div class='description_tab' scroller='product_description_scroller' target='description001'>Pricing</div>
+			{elseif $courses.product_id}
+				{core assign=events method=getTable table=events join='events_to_products' table_id='product_id' join_id='event_id' where="product_id = `$product.id`"}
+				{if count($events) > 0}
+					<div class='description_tab' scroller='product_description_scroller' target='description001'>Events</div>
+				{/if}
+			{/if}
+
+			{foreach item=d from=$product_descriptions name='product_descriptions'}
+				<div class='description_tab' scroller='product_description_scroller' target='description{$d.id}'>{$d.title}</div>
+			{/foreach}
+		</div>
+		<div id='product_description_scroller'>
+			<div id='description_window_container'>
+				{if $smarty.request.id == '3'}
+					<div class='description_window' id='description001'>
+						<h2>Purchase</h2>
+						<table class='list-table' id='purchase_table'>
+						<tr>
+							<th><a href='{$config.site_url}lightbox/purchase-program' class='ajax_lightbox'>Program</a></th>
+							<th><a href='{$config.site_url}lightbox/purchase-contract' class='ajax_lightbox'>Contract</a></th>
+							<th><a href='{$config.site_url}lightbox/purchase-initiation' class='ajax_lightbox'>Initiation</a></th>
+							<th><a href='{$config.site_url}lightbox/purchase-monthly' class='ajax_lightbox'>Monthly</a></th>
+							<th><a href='{$config.site_url}lightbox/purchase-sessions' class='ajax_lightbox'>Sessions</a></th>
+							<th><a href='{$config.site_url}lightbox/purchase-add-sessions' class='ajax_lightbox'>Add. Sessions</a></th>
+							<th></th>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Platinum</td>	<td style='background-color:#fffbd4;'>No Contract</td>	<td style='background-color:#fffbd4;'>$9,500</td>	<td style='background-color:#fffbd4;'>$0</td>	<td style='background-color:#fffbd4;'>0</td>	<td style='background-color:#fffbd4;'>$5</td>	<td style='background-color:#fffbd4;text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=4'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Gold</td>	<td>2 years</td>	<td>$6,000</td>	<td>$200</td>	<td>0</td>	<td>$5</td>	<td style='text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=5'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						</table>
+						<h2>Lease</h2>
+						<table class='list-table' id='lease_table'>
+						<tr>
+							<th><a href='{$config.site_url}lightbox/lease-program' class='ajax_lightbox'>Program</a></th>
+							<th><a href='{$config.site_url}lightbox/lease-contract' class='ajax_lightbox'>Contract</a></th>
+							<th><a href='{$config.site_url}lightbox/lease-initiation' class='ajax_lightbox'>Initiation</a></th>
+							<th><a href='{$config.site_url}lightbox/lease-monthly' class='ajax_lightbox'>Monthly</a></th>
+							<th><a href='{$config.site_url}lightbox/lease-sessions' class='ajax_lightbox'>Sessions</a></th>
+							<th><a href='{$config.site_url}lightbox/lease-add-sessions' class='ajax_lightbox'>Add. Sessions</a></th>
+							<th></th>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Tier 5</td>	<td style='background-color:#fffbd4;'>1 Year</td>	<td style='background-color:#fffbd4;'>$700</td>	<td style='background-color:#fffbd4;'>$899</td>	<td style='background-color:#fffbd4;'>100</td>	<td style='background-color:#fffbd4;'>$20</td>	<td style='background-color:#fffbd4;text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=6'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Tier 4</td>	<td>1 Year</td>	<td>$700</td>	<td>$699</td>	<td>50</td>	<td>$25</td>	<td style='text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=7'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Tier 3</td>	<td>1 Year</td>	<td>$700</td>	<td>$499</td>	<td>30</td>	<td>$25</td>	<td style='text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=8'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Tier 2</td>	<td>1 Year</td>	<td>$700</td>	<td>$399</td>	<td>15</td>	<td>$40</td>	<td style='text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=9'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						<tr>
+							<td style='background-color:#9baed0;'>Tier 1</td>	<td>2 Years</td>	<td>$700</td>	<td>$299</td>	<td>10</td>	<td>$40</td>	<td style='text-align:center;width:100px;'><a href='{$config.site_url}cart&mode=add&qty=1&id=10'><img src='{$config.image_url}btn_purchase.png' alt='Add to Shopping Cart' title='Add to Shopping Cart' style='padding-left:14px;' class='swap' /></a></td>
+						</tr>
+						</table><br />
+						Or <a href='{$config.site_url}find-a-trainer'>find a trainer</a> near you.
+					</div>
+				{elseif $courses.product_id && count($events) > 0}
+					<div class='description_window' id='description001' style='height:auto;'>
+						<table class='list-table'>
+						<tr>
+							<th>Dates</th>	<th>Title</th>	<th>Location</th>	<th>Register</th>
+						</tr>
+						{foreach item=event from=$events}
+							<tr>
+								<td style='background-color:#9baed0;font-weight:bold;'>{$event.start_date|date_format}{if $event.end_date != $event.start_date} - {$event.end_date|date_format}{/if}</td>
+								<td>{$event.title}</td>
+								<td class='list-table-center'>{$event.location}</td>
+								<td class='list-table-center'><a href='{$config.site_url}cart&mode=add&id={$product.id}&event_id={$event.id}&qty=1'><img src='{$config.image_url}btn_buynow.png' alt='Buy Now' title='Buy Now' /></a></td>
+							</tr>
+						{/foreach}
+						</table>
+					</div>
+				{/if}
+				{foreach item=d from=$product_descriptions name='product_descriptions'}
+					<div class='description_window' id='description{$d.id}'>{$d.description}</div>
+				{/foreach}
+			</div>
+		</div>
+	</div>
+{/if}
+
+{*	{core assign=products method=getTable table=products}
+	{if !$smarty.request.id}
+		{core assign=product method=getTable table=products limit='1' list=1}
+	{else}
+		{core assign=product method=getTable table=products limit='1' list=1 where="id=`$smarty.request.id`"}
+	{/if}
+<div id='content_scroller' style='width:669px;height:236px;'>
+	{core assign=imgs method=getTable table=product_images join=products_to_images where="products_to_images.product_id = `$product.id`" order='weight asc' join_id='image_id'}
+	{assign var=img_count value=$imgs|@count}
+
+	<div id='product_image'>
+		<img src='{$config.image_url}product_images/page/{$imgs.0.filename}' alt='{$product.title}' id='main_image' title='{$product.description|strip_tags}' />
+		<div id='product_title'>
+			{$product.title}<br />
+			<span>{$product.description}</span>
+		</div>
+		<div id='image_title'>
+			{$imgs.0.title}
+		</div>
+	</div>
+	<div id='product_image_list'>
+		{math assign=w equation="ceil(x/9)*y" x="$img_count" y=246}
+		<div id='product_image_scroller' style='width:{$w}px;'>
+			<div id='img_page_1' class='pgs'>
+				{assign var=pg_cnt value=1}
+				{foreach item=img from=$imgs name=imgs}
+					<img src='{$config.image_url}product_images/thumb/{$img.filename}' alt='{$img.title}' image_id='{$img.id}' title='{$img.title}' target='main_image' target_src='{$config.image_url}product_images/page/{$img.filename}' />
+					{if $smarty.foreach.imgs.iteration == 9}
+						</div>
+						<div id='img_page_{$pg_cnt+1}' class='pgs'>
+					{/if}
+				{/foreach}
+			</div>
+		</div>
+	</div>
+		{math assign=image_pages equation='ceil(x/9)' x=$img_count}
+	{if $image_pages > 1}
+	<div id='image_pages'>
+		<img src='{$config.image_url}pg_prev.gif' alt='Previous Page' id='pg_prev' target='1' max_target='1' /> <span id='current_page'>1</span> of {$image_pages} <img src='{$config.image_url}pg_next.gif' alt='Next page' id='pg_next' target='2' max_target='5' />
+	</div>
+	{/if}
+</div>
+<div id='product_scroller'>
+	{foreach item=p from=$products name='products'}
+		{core assign=i method=getTable table=product_images join=products_to_images where="products_to_images.product_id = `$p.id`" order='weight asc' join_id='image_id' limit='1' list='1'}
+		{if $p.id == $product.id}
+			<img src='{$config.image_url}product_images/list/{$i.filename}' alt='' id='product_{$smarty.foreach.products.iteration}' title='{$p.title}' />
+		{else}
+			<a href='{$config.site_url}leathers/{$p.id}/{$p.title|urlencode}.html' title='{$p.title}' ><img src='{$config.image_url}product_images/thumb_washed/{$i.filename}' alt='' id='product_{$smarty.foreach.products.iteration}' /></a>
+		{/if}
+	{/foreach}
+</div>
+<div id='product_pages'>
+	<img src='{$config.image_url}pg_prev.gif' alt='Previous Product' id='product_prev' target='1' /> <img src='{$config.image_url}pg_next.gif' alt='Next Product' id='product_next' target='2' />
+</div>
+<div id='order_sample'>
+	<form method='post' action='{$config.site_url}cart'>
+		<input type='hidden' name='mode' value='add' />
+		<input type='hidden' name='id' value='{$product.id}' />
+		<input type='hidden' name='image_id' value='{$imgs.0.id}' id='image_id' />
+		<input type='image' src='{$config.image_url}btn_order_sample.gif' />
+	</form>
+</div>
+*}
+
+{* TABLE EXPLORER
+<table cellpadding='10' cellspacing='0' border='0'>
+<tr>
+	<td style='background-color:#EEE;width:170px;' valign='top'>
+		<h3>Tables</h3>
+		<ul style='margin:0;padding:0;list-style-type:none;'>
+			<li> <a href='{$config.site_url}products&table=carts'>Carts</a></li>
+			<li> <a href='{$config.site_url}products&table=cart_items'>Cart Items</a></li>
+			<li> <a href='{$config.site_url}products&table=gift_certificates'>Gift Certificates</a></li>
+			<li> <a href='{$config.site_url}products&table=products'>Products</a></li>
+			<li> <a href='{$config.site_url}products&table=product_images'>Product Images</a></li>
+			<li> <a href='{$config.site_url}products&table=product_image_galleries'>Product Image Galleries</a></li>
+			<li> <a href='{$config.site_url}products&table=product_reviews'>Product Reviews</a></li>
+			<li> <a href='{$config.site_url}products&table=product_tags'>Product Tags</a></li>
+			<li> <a href='{$config.site_url}products&table=promotional_codes'>Promotional Codes</a></li>
+			<li> <a href='{$config.site_url}products&table=users'>Users</a></li>
+			<li> <a href='{$config.site_url}products&table=user_config'>User Config</a></li>
+			<li> <a href='{$config.site_url}products&table=user_data'>User Data</a></li>
+			<li> <a href='{$config.site_url}products&table=user_favorites'>User Favorites</a></li>
+		</ul>
+	</td>
+	<td valign='top'>
+		<h1>Add to Table : {$smarty.request.table}</h1>
+		{core assign=cols method=getTableColumns table=$smarty.request.table database=$config.db_name}
+		<form method='post' action='{$config.site_url}products'>
+			<input type='hidden' name='mode' value='add_product' />
+			<input type='hidden' name='table' value='{$smarty.request.table}' />
+			{foreach item=k from=$cols}
+				{if $k.column_name != 'id' && $k.column_name != 'date_modified'}
+					{$k.column_name}<br />
+					<input type='text' name='data[{$k.column_name}]' value='
+					{if ($k.data_type == 'int' || $k.data_type == 'decimal') && $k.column_name != 'user_id'}
+						{randnum min=1 max=100 decimals=0}
+					{elseif $k.data_type == 'tinyint' || $k.column_name == 'user_id'}
+						1
+					{elseif $k.data_type == 'timestamp'}
+						now()
+					{else}
+						{$k.column_name}
+					{/if}
+					'><p />
+				{/if}
+			{/foreach}
+			<input type='submit' value='Submit' />
+		</form><p />
+
+		{core assign=rows method=getTable table=$smarty.request.table limit='10 ' }
+
+		<table cellpadding='2' cellspacing='0' border='0'>
+			<tr style='background-color:#CCC;font-weight:bold;'>
+				{foreach item=k from=$cols}
+					<td>{$k.column_name}</td>
+				{/foreach}
+			</tr>
+			{foreach item=r from=$rows}
+				<tr style='background-color: {cycle values="#EEE,#FFF"};'>
+					{foreach item=k from=$cols}
+						<td>{$r[$k.column_name]}</td>
+					{/foreach}
+				</tr>
+			{/foreach}
+		</table>
+	</td>
+</tr>
+</table>
+
+*}

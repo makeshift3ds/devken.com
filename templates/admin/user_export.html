@@ -1,0 +1,21 @@
+{include file=admin/admin_header.html}
+
+ {* get the main content *}
+{core assign=page method=getContent pageid=user_export}
+ {* get the tip content (footer checks for $tip) *}
+{core assign=tips method=getContent pageid=user_export_tips}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+<form method='post' action='{$config.site_url}admin/navigation_handler.php' />
+<input type='hidden' name='mode' value='order' />
+<table class='list-table'>
+<tr>
+	<th>Download</th>
+	<td style='width:20px;text-align:center;'><a href='{$config.site_url}admin/user_handler.php?mode=export_users'><img src='{$config.image_url}universal/disk.png' /></a></th>
+</tr>
+</table>
+<input type='submit' value='update weights' />
+</form>
+
+{include file=admin/admin_footer.html}

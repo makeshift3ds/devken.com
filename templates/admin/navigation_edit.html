@@ -1,0 +1,89 @@
+{include file=admin/admin_header.html}
+
+<form method='post' action='{$config.site_url}admin/navigation_handler.php' id='navigation_edit' />
+{if $smarty.request.id}
+	{* update page *}
+	{core assign=page method=getContent pageid=navigation_edit}
+	{core assign=tips method=getContent pageid=navigation_edit_tips}
+	{core assign=data method=getTable table=navigation list=1 where="id=`$smarty.request.id`"}
+	{assign var=match value=$data.url|explode:':'}
+	<input type='hidden' name='mode' value='update_navigation' />
+	<input type='hidden' name='data[id]' value='{$smarty.request.id}' />
+{else}
+	{* add page *}
+	{core assign=page method=getContent pageid=navigation_add}
+	{core assign=tips method=getContent pageid=navigation_add_tips}
+	<input type='hidden' name='mode' value='insert_navigation' />
+	<input type='hidden' name='data[active]' value='1' />
+{/if}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+<table class='list-table'>
+<tr>
+	<th style='width:100px;'>Parent Link</th>
+	<td>
+		{core assign=nav method=getTable table=navigation where='parent_id is null and active=1'}
+		<select name='data[parent_id]'>
+			<option value='0'>Main Navigation</option>
+			<optgroup label='Sub Navigation' style='margin-left:10px;'>
+			{if count($nav)}
+				{foreach item=n from=$nav}
+					<option style='margin-left:10px;' value='{$n.id}'{if $n.id == $data.parent_id} selected{/if}>{$n.title|truncate:'100':'..'}</option>
+				{/foreach}
+			{else}
+				<option style='margin-left:10px;' disabled=true>None Available</option>
+			{/if}
+			</optgroup>
+		</select>
+	</td>
+</tr>
+<tr>
+	<th style='width:100px;'>Title</th>
+	<td><input type='text' name='data[title]' value='{$data.title}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Open In</th>
+	<td><select name='data[target]'>
+				<option value='_self'{if $data.target == '_self'} selected{/if}>Same Window</option>
+				<option value='_blank'{if $data.target == '_blank'} selected{/if}>New Window</option>
+			</select>
+	</td>
+</tr>
+<tr>
+	<th>Link To</th>
+	<td><select name='data[url]' id='url' style='float:left;'>
+				<option value='url'{if $match.0 == 'http'} selected{/if}>URL</option>
+				{core assign=pgs method=getTable table=pages where='type_id=1 and active=1'}
+				<optgroup label='Pages'>
+					{foreach item=p from=$pgs}
+						<option value='page:{$p.id}'{if $match.0 == 'page' && $match.1 == $p.id} selected{/if}>{$p.title|truncate:'100':'..'}</option>
+					{/foreach}
+				</optgroup>
+				{if $config.show_media}
+					{core assign=mds method=getTable table=media_categories where='active=1'}
+					<optgroup label='Media'>
+						{foreach item=m from=$mds}
+							<option value='media:{$m.id}'{if $match.0 == 'media' && $match.1 == $m.id} selected{/if}>{$m.title|truncate:'100':'..'}</option>
+						{/foreach}
+					</optgroup>
+				{/if}
+				{if $config.show_product_categories}
+					{core assign=mds method=getTable table=product_categories where='active=1 and parent_id is null'}
+						{foreach item=c from=$mds}
+						<optgroup label='{$c.title}'>
+							{core assign=pcs method=getTable table=product_categories where="active=1 and parent_id = `$c.id`"}
+							{foreach item=m from=$pcs}
+								<option value='product_category:{$m.id}'{if $match.0 == 'product_category' && $match.1 == $m.id} selected{/if}>{$m.title|truncate:'100':'..'}</option>
+							{/foreach}
+						</optgroup>
+						{/foreach}
+				{/if}
+			</select> <br /><br /><input type='text' name='href' style='width:100%;' id='href' default='enter url here' />
+	</td>
+</tr>
+</table>
+<input type='submit' value='submit' />
+</form>
+
+{include file=admin/admin_footer.html}

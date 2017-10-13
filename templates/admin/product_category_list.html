@@ -1,0 +1,54 @@
+{include file=admin/admin_header.html}
+
+ {* get the main content *}
+{core assign=page method=getContent pageid=product_category_list}
+ {* get the tip content (footer checks for $tip) *}
+{core assign=tips method=getContent pageid=product_category_list_tips}
+ {* get a list from the pages table *}
+{core assign=pages method=getTable table=product_categories limit=$config.admin_product_limit|default:10  page=$smarty.request.page|default:1 where='active=1 and parent_id is null' order='weight asc'}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+
+<form method='post' action='{$config.site_url}admin/product_handler.php' />
+<input type='hidden' name='mode' value='order_product_categories' />
+{foreach item=t from=$pages}
+	{if $pages|@count > 1}<div class='toggle' target='children_{$parent.id}'>{$t.title}</div>{/if}
+	<div id='children_{$parent.id}'>
+		<table class='list-table'>
+		<tr>
+			<th>Title</th>
+			<th style='width:30px;text-align:center;'>Weight</th>
+			<th style='width:180px;text-align:center;'>Actions</th>
+		</tr>
+			{core assign=children method=getTable table=product_categories where="active=1 and parent_id = `$t.id`" order='weight asc'}
+			{core assign=abondoned_children method=getTable table='products' where='id not in (select distinct product_id from products_to_categories)'}
+			{if count($abondoned_children)}
+				<tr style='background-color:#f3ddd4;'>
+					<td style='font-weight:bold;'>Unassigned Products</td>
+					<td>-</td>
+					<td><a href='{$config.site_url}admin/product_list.php?id=na'>View Products</a></td>
+				</tr>
+			{/if}
+			{if !count($children)}
+				<tr>
+					<td colspan='3'>
+						No Categories have been set
+					</td>
+				</tr>
+			{else}
+				{foreach item=c from=$children}
+				<tr{if $c.active != 1} class='inactive'{/if}>
+					<td>{$c.title}</td>
+					<td><input type='hidden' name='ids[]' value='{$c.id}' /><input type='text' name='weights[]' value='{$c.weight}' class='weight_input' /></td>
+					<td style='text-align:right;'><a href='{$config.site_url}admin/product_category_edit.php?id={$c.id}'>Edit</a> : <a href='{$config.site_url}admin/product_handler.php?mode=remove_product_category&id={$c.id}'>Delete</a> : <a href='{$config.site_url}admin/product_list.php?id={$c.id}'>View Products</a></td>
+				</tr>
+				{/foreach}
+			{/if}
+		</table>
+	</div>
+{/foreach}
+
+<input type='submit' value='update order' />
+</form>
+{include file=admin/admin_footer.html}

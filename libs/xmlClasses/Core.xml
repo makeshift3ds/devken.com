@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Core>
+  <timestamp>11:09:01:16:10:34</timestamp>
+  <__construct></__construct>
+  <getContent><pageid>1</pageid><debug>1</debug></getContent>
+  <checkPage><pageid></pageid><debug>1</debug></checkPage>
+  <res2array><res></res></res2array>
+  <loadData><path></path></loadData>
+  <slugCreate><str></str></slugCreate>
+  <uploadFile><file></file><dest></dest><name_override>1</name_override><types>1</types></uploadFile>
+  <restrictFileTypes><params></params></restrictFileTypes>
+  <getTable><table></table><where>1</where><list>1</list><join>1</join><join_id>1</join_id><limit>1</limit><order>1</order><page>1</page><cols>1</cols><query>1</query><group>1</group><debug>1</debug></getTable>
+  <getPagination><table></table><where>1</where><join>1</join><join_id>1</join_id><page>1</page><limit>1</limit><cols>1</cols><query>1</query><group>1</group><debug>1</debug></getPagination>
+  <buildSearch><columns></columns><query></query></buildSearch>
+  <getTableColumns><table></table><database></database></getTableColumns>
+  <getCategories><table></table><table_id>1</table_id><where>1</where><order>1</order><join>1</join><join_id>1</join_id><limit>1</limit><default>1</default><debug>1</debug></getCategories>
+  <getCategoriesGrouped><table></table><where>1</where><order>1</order><debug>1</debug></getCategoriesGrouped>
+  <formatCategories><res></res><debug>1</debug></formatCategories>
+  <redirect><loc></loc></redirect>
+  <dump><id>1</id><vals>1</vals></dump>
+  <formatSmartyDate><pre></pre><target>1</target></formatSmartyDate>
+  <arrayToWhere><data></data></arrayToWhere>
+  <sendMail><data></data><debug>1</debug></sendMail>
+  <insertOrder><data></data></insertOrder>
+  <adminRequired></adminRequired>
+  <verifyLogin><u></u><p></p><r>1</r><redirect>1</redirect><debug>1</debug></verifyLogin>
+  <logout><path>1</path></logout>
+  <ids><data></data><col>1</col></ids>
+  <processPassword><ps></ps></processPassword>
+  <formatNavigationLink><url></url></formatNavigationLink>
+  <updateAccountInfo><data></data></updateAccountInfo>
+  <registerUser><data></data></registerUser>
+  <getStates></getStates>
+  <verifyCheckoutInfo><data></data></verifyCheckoutInfo>
+  <activateUser><reg_id></reg_id><redir>1</redir></activateUser>
+  <processPaypalCheckout><data></data><debug>1</debug></processPaypalCheckout>
+  <getHaversine><table>1</table><distance>1</distance><address>1</address><lat>1</lat><lng>1</lng><where>1</where><measurement>1</measurement><debug>1</debug></getHaversine>
+  <geocodeAddress><address></address><mode>1</mode><debug>1</debug></geocodeAddress>
+  <createGoogleMapsXML><data></data><debug>1</debug></createGoogleMapsXML>
+  <parseQuery><str></str></parseQuery>
+  <classToXML><className></className></classToXML>
+  <updateClassXML></updateClassXML>
+  <displayBenchmark></displayBenchmark>
+  <logUrl><url>1</url></logUrl>
+  <dumpRegistry><b>1</b></dumpRegistry>
+</Core>

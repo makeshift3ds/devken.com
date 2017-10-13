@@ -1,0 +1,32 @@
+<div id='home_container' style='position:relative;height:276px;margin:-2px 14px;background:transparent url(../images/bg_home_window.jpg) top left no-repeat;'>
+	<div id='animoto' style='position:absolute;top:18px;left:81px;width:432px;height:240px;border:1px solid #666;'>
+		<object id="vp1U0VRM" width="432" height="240" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"><param name="movie" value="http://static.animoto.com/swf/w.swf?w=swf/vp1&e=1287899795&f=U0VRMIQLMazMQHlljGM7Cg&d=34&m=b&r=w&i=m&options="></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed id="vp1U0VRM" src="http://static.animoto.com/swf/w.swf?w=swf/vp1&e=1287899795&f=U0VRMIQLMazMQHlljGM7Cg&d=34&m=b&r=w&i=m&options=" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="432" height="240"></embed></object>
+	</div>
+	<div id='home_window_btns' style='position:absolute;top:117px;right:9px;width:346px;height:300px;'>
+		<a href='{$config.site_url}products' style='background:transparent url(images/btn_services.png) top left;width:346px;height:72px;display:block;margin-bottom:6px;'></a>
+		<a href='{$config.site_url}faqs' style='background:transparent url(images/btn_answers.png) top left;width:346px;height:72px;display:block;'></a>
+	</div>
+</div>
+<div id='home_content' style='position:relative;min-height:276px;margin:-2px 14px;'>
+	<div id='home_content_left' style='float:left;width:545px;padding:0 25px;min-height:200px;'>
+		<h1>About DevKen</h1>
+		<div class='content_block'>
+			<p>
+			I am a professional PHP, MySQL, ActionScript and all around code monkey for several industries. While my focus is mainly on Content Management Systems and eCommerce websites, I tend to dabble in many things. When I am not programming I am deep in my
+			wood shop or sleeping.</p>
+			<p>
+			If you would like quote on a project, or just have some questions - send me an email - <a href='mailto:kenelliottmc@gmail.com'>kenelliottmc@gmail.com</a>. 
+		</div>
+	</div>
+	<div id='home_content_right' style='float:left;width:325px;padding:0 20px;min-height:200px;'>
+		<h1>BLOGS</h1>
+		<div class='content_block'>
+			
+					{core assign='cats' method=getTable table=blog_categories order='title asc'}
+					{foreach item=c from=$cats}
+						{core assign=ct method=getTable table=blog_posts where="id in (select distinct blog_id from blog_posts_to_categories where category_id = '`$c.id``') and active=1" cols='count(*) as count' list=1 }
+						<p><a href='{$config.site_url}blog&id={$c.id}'  style='color:#666;font-weight:bold;' >{$c.title}</a> <span class='small red'>({$ct.count|default:0})</span></p>
+			{/foreach}
+		</div>
+	</div>
+</div>

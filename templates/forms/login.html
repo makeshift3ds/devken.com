@@ -1,0 +1,15 @@
+<form method='post' action='{$config.site_url}login'>
+{if $return}<input type='hidden' name='return' value='{$return}' />{/if}
+
+Username<br />
+<input type='text' name='data[username]' value='' /><p />
+Password<br />
+<input type='password' name='password' value='' /><p />
+
+<input type='image' src='{$config.image_url}btn_login.png' class='swap' />
+</form>
+<p>
+{if $config.show_lost_password}<a href='{$config.site_url}lost-password'>Lost Password?</a><br />{/if}
+{if $config.show_registration}<a href='{$config.site_url}registration'>New User Registration</a>{/if}
+</p>
+

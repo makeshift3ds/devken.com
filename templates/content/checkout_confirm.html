@@ -1,0 +1,38 @@
+{cart method=getCart assign=cart}
+<h1>Confirm Your Order</h1>
+<div style="width: 713px; height: 400px; overflow: auto; margin-left: 10px;">
+<table cellpadding='0' cellspacing='0' border='0' class='grider' style='width:95%; margin: 10px;'>
+{assign var=weight value=0}
+{assign var=subtotal value=0}
+{foreach item=item from=$cart key=index}
+	{core method=getArtwork assign=art id=$item.id}
+	{assign var=item_total value=$item.qty*$art.price}
+	{assign var=item_weight value=$item.weight*$item.qty}
+	{assign var=subtotal value=$subtotal+$item_total}
+	{assign var=weight value=$weight+$item_weight}
+{/foreach}
+	<tr>
+		<td colspan='3' rowspan='10'>This is the final step in the checkout process. After this screen you order will be complete.</td>
+		<td>Subtotal</td>
+		<td>${$subtotal|number_format:2}</td>
+	</tr>
+	<tr>
+		<td>Shipping & Handling</td>
+		<td>${math equation="weight * shipping_rate" weight=$weight shipping_rate=1 format="%.2f"}</td>
+	</tr>
+	<tr>
+		<td>Sales Tax</td>
+		<td>${math equation="subtotal * tax_rate" subtotal=$subtotal tax_rate='.065' format="%.2f"}</td>
+	</tr>
+	<tr>
+		<td>Total</td>
+		<td>${math equation="subtotal + ( subtotal * tax_rate ) + ( weight * shipping_rate )" subtotal=$subtotal tax_rate='.065' weight=$weight shipping_rate=1 format="%.2f"}</td>
+	</tr>
+</tbody>
+</table>
+<form action="{$config.site_url}checkout" method="POST">
+<input type="hidden" name='p' value="receipt" />
+<p><input type="submit" value='Confirm Order' /></p>
+</form>
+
+</div>

@@ -1,0 +1,118 @@
+
+<div id='admin_menu'>
+	<ul id='admin_links'>
+		<li id='pages' subnav='pages_subnav'>Pages</li>
+		<li id='media' {if $config.show_media}subnav='media_subnav'{/if}>Media</li>
+		<li id='users' {if $config.show_users}subnav='users_subnav'{/if}>Users</li>
+		<li id='products' {if $config.show_products}subnav='products_subnav'{/if}>Products</li>
+		<li id='commerce' {if $config.show_orders}subnav='commerce_subnav'{/if}>Commerce</li>
+		<li id='config' {if $config.show_configuration}subnav='config_subnav'{/if}>Configuration</li>
+	</ul>
+	<div id='pages_subnav'>
+		<ul class='subnav_links'>
+			{* pages have to be shown *}
+			<li><a href='{$config.site_url}admin/page_list.php'>Pages</a></li>
+			{if $config.show_page_types}
+			<li><a href='{$config.site_url}admin/page_type_list.php'>Page Types</a></li>
+			{/if}
+			{if $config.show_blog}
+			<li><a href='{$config.site_url}admin/blog_list.php'>Blog</a></li>
+			<li><a href='{$config.site_url}admin/blog_category_list.php'>Blog Categories</a></li>
+			{/if}
+			{if $config.show_navigation}
+			<li><a href='{$config.site_url}admin/navigation_list.php'>Navigation</a></li>
+			{/if}
+		</ul>
+	</div>
+
+	<div id='media_subnav'>
+		<ul class='subnav_links'>
+			{if $config.show_media}
+			<li><a href='{$config.site_url}admin/media_list.php'>Media</a></li>
+			{/if}
+			{if $config.show_media_categories}
+			<li><a href='{$config.site_url}admin/media_category_list.php'>Media Categories</a></li>
+			{/if}
+			{if $config.show_events}
+			<li><a href='{$config.site_url}admin/event_list.php'>Events</a></li>
+			{/if}
+			{if $config.show_event_categories}
+			<li><a href='{$config.site_url}admin/event_category_list.php'>Event Categories</a></li>
+			{/if}
+		</ul>
+	</div>
+
+	<div id='users_subnav'>
+		<ul class='subnav_links'>
+			{if $config.show_users}
+			<li><a href='{$config.site_url}admin/user_list.php'>Users</a></li>
+			{/if}
+			{if $config.show_user_types}
+			<li><a href='{$config.site_url}admin/user_type_list.php'>User Types</a></li>
+			{/if}
+			{if $config.show_user_export}
+			<li><a href='{$config.site_url}admin/user_export.php'>Export Users</a></li>
+			{/if}
+			{if $config.show_clients}
+			<li><a href='{$config.site_url}admin/client_list.php'>Trainers</a></li>
+			{/if}
+			{if $config.show_client_types}
+			<li><a href='{$config.site_url}admin/client_type_list.php'>Trainer Types</a></li>
+			{/if}
+		</ul>
+	</div>
+
+	<div id='products_subnav'>
+		<ul class='subnav_links'>
+			{if $config.show_products}
+			{* <li><a href='{$config.site_url}admin/product_list.php'>Products</a></li> *}
+			<li><a href='{$config.site_url}admin/product_edit.php'>Add Product</a></li>
+			{/if}
+			{if $config.show_product_categories}
+			<li><a href='{$config.site_url}admin/product_category_list.php'>Product Categories</a></li>
+			{/if}
+			{if $config.show_product_groups}
+			<li><a href='{$config.site_url}admin/product_group_list.php'>Product Groups</a></li>
+			{/if}
+			{if $config.show_product_import}
+			<li><a href='{$config.site_url}admin/excel_import.php'>Excel Import</a></li>
+			{/if}
+		</ul>
+	</div>
+
+	<div id='commerce_subnav'>
+		<ul class='subnav_links'>
+			{if $config.show_orders}
+			<li><a href='{$config.site_url}admin/order_list.php'>Orders</a></li>
+			{/if}
+			{if $config.show_shopping_carts}
+			<li><a href='{$config.site_url}admin/cart_list.php'>Shopping Carts</a></li>
+			{/if}
+			{if $config.show_wishlists}
+			<li><a href='{$config.site_url}admin/cart_list.php?type_id=2='>Wishlists</a></li>
+			{/if}
+			{if $config.show_gift_certificates}
+			<li><a href='{$config.site_url}admin/gift_certificate_list.php'>Gift Certificates</a></li>
+			{/if}
+			{if $config.show_promo_codes}
+			<li><a href='{$config.site_url}admin/promo_list.php'>Promo Codes</a></li>
+			{/if}
+		</ul>
+	</div>
+	<div id='config_subnav'>
+		<ul class='subnav_links'>
+			{if $config.show_configuration}
+			<li><a href='{$config.site_url}admin/config_list.php'>Options</a></li>
+			{/if}
+			{if $config.show_promo_codes}
+			<li><a href='{$config.site_url}admin/page_list.php'>User Manual</a></li>
+			{/if}
+			{if $config.show_promo_codes}
+			<li><a href='{$config.site_url}admin/page_list.php'>Request Assistance</a></li>
+			{/if}
+			{if $config.show_promo_codes}
+			<li><a href='{$config.site_url}admin/page_list.php'>Terms of Service</a></li>
+			{/if}
+		</ul>
+	</div>
+</div>

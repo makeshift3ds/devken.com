@@ -1,0 +1,32 @@
+{core assign=media method=getTable table=media where="active=1" order='weight asc'}
+<ul style='list-style-type:none;margin:0;padding:0;'>
+{foreach item=m from=$media name='media'}
+	<li style='list-style-type:none;margin:0;padding:0;width:240px;padding:4px;float:left;'>
+	{if $m.download}
+		{if $m.thumbnail}
+			<a href='{$config.site_url}videos/{$m.id}' rel="lightbox[set 540 350]" title="{$m.title}::{$m.description}"><img src='{$config.site_url}media/thumbnails/{$m.thumbnail}' width='240' height='130' /></a>
+		{else}
+			<a href='{$config.site_url}videos/{$m.id}' rel="lightbox[set 540 350]" title="{$m.title}::{$m.description}">{$m.title}</a>
+		{/if}
+	{elseif $m.link}
+		{if strpos($m.link,'application/x-shockwave-flash') !== false}
+			{if $m.thumbnail}
+				<a href="{$config.site_url}videos/{$m.id}" rel="lightbox[set 340 300]" title="{$m.title}::{$m.description}"><img src='{$config.site_url}media/thumbnails/{$m.thumbnail}' width='240' height='130' /></a>
+			{else}
+				<a href="{$config.site_url}videos/{$m.id}" rel="lightbox[set 340 300]" title="{$m.title}::{$m.description}">{$m.title}</a>
+			{/if}
+		{else}
+			{core assign=q method=parseQuery str=$m.link}
+			{if $m.thumbnail}
+				<a href="{$m.link}" rel="lightbox[set 480 380]" title="{$m.title}::{$m.description}"><img src='{$config.site_url}media/thumbnails/{$m.thumbnail}' width='240' height='130' /></a>
+			{elseif $q.host == 'www.youtube.com' or $q.host == 'youtube.com'}
+				<a href="{$m.link}" rel="lightbox[set 480 380]" title="{$m.title}::{$m.description}"><img src='http://img.youtube.com/vi/{$q.values.v}/0.jpg' width='240' height='130' /></a>
+			{else}
+				<a href="{$m.link}" rel="lightbox[set 480 380]" title="{$m.title}::{$m.description}">{$m.title}</a>
+			{/if}
+		{/if}
+	{/if}
+	</li>
+{/foreach}
+</ul>
+<br clear='all' class='clear' />

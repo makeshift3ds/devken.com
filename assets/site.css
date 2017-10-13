@@ -1,0 +1,171 @@
+html {height:100%;background-color:#7f8563;}
+body {margin:0;font-size:17px;color: #253759;font-family: "PT Sans","Trebuchet MS", Arial;}
+a {text-decoration: underline;}
+a:hover {text-decoration:none;}
+img {border: 0;}
+h1,h2,h3 {}
+h1 {font-size:1.5em;margin-bottom:20px;}
+h2 {font-size:1.2em;margin-bottom:20px;}
+
+/* Layout */
+#header,#container,#footer {
+	width: 90%;
+	margin: 0 auto;
+	clear: both;
+}
+
+#header {
+	margin-bottom: 2px;
+	position:relative;
+	height:162px;
+	width:988px;
+	background:transparent url(../images/bg_header.gif) top left no-repeat;
+}
+
+#header #logo {
+	width:200px;
+	font-size:43px;
+	line-height:38px;
+	font-weight:bold;
+	position: relative;
+	top: 80px;
+	left: 40px;
+	color: #4b4a39;
+}
+
+#header #main_nav {
+	list-style-type:none;
+	position:absolute;
+	top:115px;
+	right:30px;
+}
+
+#header #main_nav li {
+	width:auto;
+	margin-left:40px;
+	float:left;
+}
+
+#header #main_nav li a {
+	color: #333;
+	font-weight:bold;
+	font-size:12px;
+	text-decoration:none;
+}
+#header #main_nav li a:hover {
+	text-decoration:underline;
+}
+
+#container {
+	min-height: 400px;
+	padding:10px;
+	line-height:1.3em;
+}
+
+#container a {
+	color: #4b4a39;
+	font-weight:bold;
+	text-decoration:none;
+}
+
+#container a:hover {
+	color: #3f4358;
+	font-weight:bold;
+}
+
+#blog_list .blog_header a {
+	text-decoration:none;
+}
+
+#blog_list .blog_header a:hover {
+	color:#3f4358;
+}
+
+#main_container {
+	width:988px;
+	margin:0 auto;
+	background: #7f8563 url(../images/bg_main_y.gif) top left repeat-y;
+}
+
+#footer {
+	width: 988px;
+	height: 315px;
+	background: transparent url(../images/bg_footer.gif) top left no-repeat;
+	position:relative;
+}
+
+#copyright {
+	position:absolute;
+	left:0;
+	bottom:8px;
+	text-align:center;
+	width:100%;
+}
+
+#footer .box {
+	width:220px;
+	padding:10px;
+	margin: 0 2px;
+	float:left;
+	text-align:left;
+	height:238px;
+	overflow:hidden;
+	color:#FFF;
+}
+
+#footer .box h3 {
+	color:#FFF;
+	text-transform:uppercase;
+	padding-bottom:6px;
+	border-bottom:1px dotted #CCC;
+	margin-bottom:12px;
+}
+
+#footer .box a {
+	color: #FFF;
+}
+
+#footer #flickr_feed {
+	margin-right:0;
+	width:234px;
+	padding-right:0;
+}
+
+#footer #flickr_feed img {
+	float:left;
+	margin-right:6px;
+	margin-bottom:6px;
+	border:1px solid #333;
+}
+
+#footer #flickr_feed img:hover {
+	border:1px solid #CCC;
+}
+
+#footer #fav_sites ul {
+	margin:0;
+	padding:0;
+	list-style-type:none;
+}
+
+#footer #fav_sites ul li {
+	padding-left:22px;
+	background:transparent url(../images/universal/office/forward16.png) center left no-repeat;
+	margin-bottom:6px;
+}
+
+#footer #client_login label {
+	color:#FFF;
+}
+
+.widget .blog_image {
+	border: 1px solid #CCC;
+}
+
+.widget .blog_image:hover {
+	border: 1px solid #000;
+}
+
+
+input[type='submit'] {cursor:pointer;border:1px solid #666;background-color:#333;color:#CCC;padding:3px 10px;text-align:center;font-size:10px;font-weight:bold;}
+input[type='submit']:hover {background-color:#444;}

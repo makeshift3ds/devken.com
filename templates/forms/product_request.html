@@ -1,0 +1,33 @@
+{core assign=data method=getContent pageid=product_request}
+<h1>{$data.title}</h1>
+{$data.content}
+<link rel="stylesheet"  type="text/css" href="{$config.site_url}assets/registration.css" />
+<form method='post' action='{$config.site_url}comment'>
+	<input type='hidden' name='mode' value='product_info' />
+	<ul style='width:100%;'>
+		<li style='padding-bottom:0;'>
+			{* <label class="description">Request Product Information</label> *}
+				<div class="left">
+					<input id="firstName" name="data[firstName]" class="element text medium" type="text" maxlength="255" />
+					<label>First Name</label>
+				</div>
+				<div class="right">
+					<input id="lastName" name="data[lastName]" class="element text medium" type="text" maxlength="255" />
+					<label>Last Name</label>
+				</div>
+				<div class="left">
+					<input id="firstName" name="data[email]" class="element text medium" type="text" maxlength="255" />
+					<label>Email Address</label>
+				</div>
+				<div class="right">
+					<input id="lastName" name="data[phone]" class="element text medium" type="text" maxlength="255" />
+					<label>Phone Number</label>
+				</div>
+				<div style='width:100%;clear:both;'>
+					<textarea name='data[comments]' class='element textarea small' style='width:98%;'></textarea>
+					<label>Comments</label>
+				</div>
+			<input type='image' src='{$config.image_url}btn_submit_request.png' class='swap' />
+		</li>
+	</ul>
+</form>

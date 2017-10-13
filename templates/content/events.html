@@ -1,0 +1,80 @@
+{core assign=event_categories method=getTable table=event_categories where='active=1'}
+<div id='events-carousel'>
+	<div class="cycle-carousel">
+		<ul class="tab-nav">
+			{foreach item=d from=$event_categories name='event_categories'}
+					<li><a href="#event-tab{$d.id}" class="active tab" title="1">{$d.title}</a></li>
+			{/foreach}
+		</ul>
+		<div class="tabs-holder">
+			<ol class="tabs">
+			{foreach item=d from=$event_categories name='event_categories'}
+				{core assign=events method=getTable table=events where="cat_id = `$d.id` and active=1 and (removal_date > now() or removal_date = '`$config.default_date_value`')" order='start_date asc'}
+				<li {if $smarty.foreach.event_categories.iteration == 1}class="active"{/if} id="event-tab{$d.id}">
+							{foreach item=event from=$events name='events'}
+								{core assign=products method=getTable table=products join=events_to_products join_id='product_id' where="events_to_products.event_id = `$event.id` and products.active=1"}
+								<p clear='all'>
+									<strong>{$event.title}</strong><br />
+									<em><strong>{$event.start_date|date_format}{if $event.end_date != $event.start_date} - {$event.end_date|date_format}{/if}</em></strong><br />
+									<div style='padding-bottom:16px;margin-bottom:4px;border-bottom:1px dashed #CCC;'>{$event.description}
+									{if count($products) > 0}
+									<br clear='all' />
+										{foreach item=product from=$products}
+											<a href='{$config.site_url}products&id={$product.id}' style='margin-right:10px;padding:2px;height:18px;display:block;width:auto;float:left;font-size:12px;'><img src='{$config.image_url}universal/register_large.gif' style='margin-bottom:-6px;'> {$product.title}</a>
+										{/foreach}
+									<br clear='all' />
+									{/if}
+									</div>
+								</p>
+							{/foreach}
+							{if !count($events)}
+								<p>
+									No Events Available
+								</p>
+							{/if}
+				</li>
+				{/foreach}
+			</ol>
+		</div>
+	</div>
+</div>
+
+
+{*
+<div id='scroller_container'>
+	{foreach item=d from=$event_categories name='event_categories'}
+		<div class='scroller_tab' scroller='scroller' target='scroller{$d.id}'>{$d.title}</div>
+	{/foreach}
+</div>
+<div id='scroller'>
+	<div id='scroller_window_container'>
+		{foreach item=d from=$event_categories name='event_categories'}
+			{core assign=events method=getTable table=events where="cat_id = `$d.id` and active=1 and (removal_date > now() or removal_date = '`$config.default_date_value`')" order='start_date asc'}
+			<div class='scroller_window' id='scroller{$d.id}'>
+				{foreach item=event from=$events name='events'}
+					{core assign=products method=getTable table=products join=events_to_products join_id='product_id' where="events_to_products.event_id = `$event.id` and products.active=1"}
+					<p clear='all'>
+						<strong>{$event.title}</strong><br />
+						<em><strong>{$event.start_date|date_format}{if $event.end_date != $event.start_date} - {$event.end_date|date_format}{/if}</em></strong><br />
+						<div style='padding-bottom:16px;margin-bottom:4px;border-bottom:1px dashed #CCC;'>{$event.description}
+						{if count($products) > 0}
+						<br clear='all' />
+							{foreach item=product from=$products}
+								<a href='{$config.site_url}products&id={$product.id}' style='margin-right:10px;padding:2px;height:18px;display:block;width:auto;float:left;font-size:12px;'><img src='{$config.image_url}universal/register_large.gif' style='margin-bottom:-6px;'> {$product.title}</a>
+							{/foreach}
+						<br clear='all' />
+						{/if}
+						</div>
+
+					</p>
+				{/foreach}
+				{if !count($events)}
+					<p>
+						No Events Available
+					</p>
+				{/if}
+			</div>
+		{/foreach}
+	</div>
+</div>
+*}

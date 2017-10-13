@@ -1,0 +1,14 @@
+<form id='s1' xhr_type='update' xhr_preload='false' trigger='btn_s1' success_element='update1' fail_element='update_error'>
+	<table cellpadding='2' cellspacing='0' border='0' width='100%' id='update1'>
+	<tr>
+		<td>
+			<input type='hidden' name='mode' value='test_update' />
+			ID <input type='text' name='id' value='{$_REQUEST.id}' style='width:50px;' />
+		</td>
+		<td>
+			Title <input type='text' name='title' value='{$_REQUEST.title}'  style='width:100px;' />
+			<input id='btn_s1' type='submit' value='GO' />
+		</td>
+	</tr>
+	</table>
+</form><p />

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Core>
+  <timestamp>11:09:01:16:10:14</timestamp>
+  <Commerce></Commerce>
+  <getTotals><shipping_data>1</shipping_data><debug>1</debug></getTotals>
+  <getTax><subtotal></subtotal><shipping_data>1</shipping_data><debug>1</debug></getTax>
+  <getShipping><weight></weight><shipping_data>1</shipping_data><debug>1</debug></getShipping>
+  <createCC><type>1</type></createCC>
+</Core>

@@ -1,0 +1,45 @@
+{if !isset($smarty.request.query)}
+	No Search Defined
+{else}
+	{core
+		assign=results
+		method=getTable
+		table=pages
+		where='active=1 and type_id=1'
+		cols=$searches.pages
+		query=$smarty.request.query
+		limit=$config.page_search_limit|default:10
+		page=$smarty.request.page|default:1
+		order='score desc'
+		debug=1
+	}
+	{core
+		assign=pagination
+		method=getPagination
+		table=pages
+		limit=$config.page_search_limit|default:10
+		page=$smarty.request.page|default:1
+		where='active=1 and type_id=1'
+		cols=$searches.pages
+		query=$smarty.request.query
+		debug=null
+	}
+
+	{* core method=dump id='results' vals=$pagination *}
+	{if $pagination.pages > 1}
+		<div class='search-table-pagination'>
+			<div class='prev'><a href='{$config.site_url}search&query={$smarty.request.query}&page={$pagination.prev}'>Prev</a></div>
+			<div class='pages'>Page {$smarty.request.page|default:1} of {$pagination.pages}</div>
+			<div class='next'><a href='{$config.site_url}search&query={$smarty.request.query}&page={$pagination.next}'>Next</a></div>
+		</div>
+	{/if}
+
+	{if $pagination.items == 0}
+		No results have been found.
+	{else}
+		{foreach item=result from=$results}
+			<p><a href='{$config.site_url}{$result.id}'>{$result.title}</a> <br />
+			{$result.content|strip_tags|truncate:'200':'..'}</p>
+		{/foreach}
+	{/if}
+{/if}

@@ -1,0 +1,19 @@
+<div id='widget_insert'>
+	<h3>Ajax Insert Example</h3>
+	This demonstrates the ability to update a row of information with ajax. It works by replacing the element with a new copy. Use valid html (can't use table row's)<p />
+	<div id='insert_error' class='widget_error' style='display:none;'></div>
+	<form id='s2' xhr_type='insert' xhr_preload='false' trigger='btn_s2' success_element='widget_insert' fail_element='insert_error'>
+		<table cellpadding='2' cellspacing='0' border='0' width='100%'>
+		<tr>
+			<td>
+				<input type='hidden' name='mode' value='test_insert' />
+				ID <input type='text' name='id' value='' style='width:50px;' />
+			</td>
+			<td>
+				Title <input type='text' name='title' value=''  style='width:100px;' />
+				<input id='btn_s2' type='submit' value='GO' />
+			</td>
+		</tr>
+		</table>
+	</form><p />
+</div>

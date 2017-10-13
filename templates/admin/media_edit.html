@@ -1,0 +1,158 @@
+{include file=admin/admin_header.html}
+
+{if $smarty.request.id}
+	{* update page *}
+	{core assign=page method=getContent pageid=media_edit}
+	{core assign=tips method=getContent pageid=media_edit_tips}
+	{core assign=data method=getTable table=media list=1 where="id=`$smarty.request.id`"}
+{else}
+	{* add page *}
+	{core assign=page method=getContent pageid=media_add}
+	{core assign=tips method=getContent pageid=media_add_tips}
+{/if}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+{if !$smarty.request.id}
+<div id='default-carousel'>
+	<div class="cycle-carousel">
+		<ul class="tab-nav">
+			<li><a href="#media-tab" class="tab">Media</a></li>
+			<li><a href="#youtube-tab" class="tab">Social Network</a></li>
+		</ul>
+		<div class="tabs-holder">
+			<ol class="tabs">
+				<li id="media-tab">
+{/if}
+
+{if !$smarty.request.id || $data.link == ''}
+					<form method='post' action='{$config.site_url}admin/media_handler.php' id='media_edit' />
+						{if $smarty.request.id}
+							<input type='hidden' name='mode' value='update_media' />
+							<input type='hidden' name='data[id]' value='{$smarty.request.id}' />
+						{else}
+							<input type='hidden' name='mode' value='insert_media' />
+							<input type='hidden' name='data[active]' value='1' />
+							{if !$config.show_media_categories}<input type='hidden' name='data[cat_id]' value='1' />{/if}
+						{/if}
+						<table class='list-table'>
+						{if $config.show_media_categories}
+						<tr>
+							<th>Category</td>
+							<td>
+								{core assign=cats method=getCategories table=media_categories order='id asc'}
+								{html_options name=data[cat_id] options=$cats selected=$data.cat_id}
+							</td>
+						</tr>
+						{/if}
+						<tr>
+							<th>Title</th>
+							<td><input type='text' name='data[title]' value='{$data.title}' style='width:100%;' /></td>
+						</tr>
+						<tr>
+							<th valign='top'>Description</th>
+							<td><textarea name='data[description]' style='width:100%;height:80px;'>{$data.description}</textarea></td>
+						</tr>
+						<tr>
+							<th valign='top'>File Upload</th>
+							<td>
+								{if $data.download}
+									<a href='{$config.site_url}downloads/{$data.download}' id='download_link'>{$data.download}</a> -
+									<a href='{$config.site_url}admin/media_handler.php?mode=delete_download&id={$smarty.request.id}'>Delete Download</a>
+								{else}
+									<input type='hidden' name='data[download]' value='' id='media_filename' />
+									<a href="#" id="media-attach">Attach Video</a>
+									<ul class='upload-list' id="media-list"></ul>
+									<a href="#" id="media-attach2" style='display:none;'>Attach another file</a>
+								{/if}
+							</td>
+						</tr>
+						<tr>
+							<th valign='top'>Thumbnail</th>
+							<td>
+								{if $smarty.request.id && $data.thumbnail}
+								<div id='thumb{$data.id}'>
+									<a href='{$config.site_url}downloads/{$data.thumbnail}' id='download_link'>{$data.thumbnail}</a> -
+									<a href='{$config.site_url}admin/media_handler.php?mode=delete_thumbnail&id={$smarty.request.id}'>Delete Thumbnail</a>
+								</div>
+								{else}
+									<input type='hidden' name='data[thumbnail]' value='' id='thumb_filename' />
+									<a href="#" id="thumb-attach">Attach Thumbnail</a>
+									<ul class='upload-list' id="thumb-list"></ul>
+									<a href="#" id="thumb-attach2" style='display:none;'>Attach another file</a>
+								{/if}
+							</td>
+						</tr>
+						</table>
+						<input type='submit' value='submit' />
+					</form>
+{/if}
+
+{if !$smarty.request.id}
+				</li>
+				<li id='youtube-tab'>
+{/if}
+
+{if !$smarty.request.id || $data.link}
+					<form method='post' action='{$config.site_url}admin/media_handler.php' id='media_edit' />
+						{if $smarty.request.id}
+							<input type='hidden' name='mode' value='update_media' />
+							<input type='hidden' name='data[id]' value='{$smarty.request.id}' />
+						{else}
+							<input type='hidden' name='mode' value='insert_media' />
+							<input type='hidden' name='data[active]' value='1' />
+							{if !$config.show_media_categories}<input type='hidden' name='data[cat_id]' value='1' />{/if}
+						{/if}
+						<table class='list-table'>
+						{if $config.show_media_categories}
+						<tr>
+							<th>Category</td>
+							<td>
+								{core assign=cats method=getCategories table=media_categories order='id asc'}
+								{html_options name=data[cat_id] options=$cats selected=$data.cat_id}
+							</td>
+						</tr>
+						{/if}
+						<tr>
+							<th>Title</th>
+							<td><input type='text' name='data[title]' value='{$data.title}' style='width:100%;' /></td>
+						</tr>
+						<tr>
+							<th valign='top'>Description</th>
+							<td><textarea name='data[description]' style='width:100%;height:80px;'>{$data.description}</textarea></td>
+						</tr>
+						<tr>
+							<th valign='top'>URL / Embed Code</th>
+							<td>
+								<input type='text' name='data[link]' value='{$data.link}' style='width:100%;' />
+							</td>
+						</tr>
+						<tr>
+							<th valign='top'>Thumbnail</th>
+							<td>
+								{if $smarty.request.id && $data.thumbnail}
+									<a href='{$config.site_url}downloads/{$data.thumbnail}' id='youtube_thumbnail'>{$data.thumbnail}</a>
+									<a href='{$config.site_url}admin/media_handler.php?mode=delete_thumbnail&id={$smarty.request.id}'>Delete</a>
+								{else}
+									<input type='hidden' name='data[thumbnail]' value='' id='youtube_filename' />
+									<a href="#" id="youtube-attach">Attach Thumbnail</a>
+									<ul class='upload-list' id="youtube-list"></ul>
+									<a href="#" id="youtube-attach2" style='display:none;'>Attach another file</a>
+								{/if}
+							</td>
+						</tr>
+						</table>
+						<input type='submit' value='submit' />
+					</form>
+{/if}
+
+{if !$smarty.request.id}
+				</li>
+			</ol>
+		</div>
+	</div>
+</div>
+{/if}
+<br />
+
+{include file=admin/admin_footer.html}

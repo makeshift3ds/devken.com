@@ -1,0 +1,17 @@
+{include file="components/main_header.html"}
+{if $checkout_receipt}
+	{include file="components/main_template.html" path='checkout-receipt'}
+	{include file="content/checkout_receipt.html"}
+{elseif $checkout_preview || $smarty.request.mode=='checkout_preview'}
+	{include file="components/main_template.html" path='checkout-preview'}
+	{include file="forms/checkout_preview.html"}
+{else}
+	{if $account_info.id}
+		{include file="components/main_template.html" path='checkout'}
+		{include file="forms/checkout.html"}
+	{else}
+		{include file="components/main_template.html" path='checkout-login'}
+		{include file="forms/checkout_login.html"}
+	{/if}
+{/if}
+{include file="components/main_footer.html"}

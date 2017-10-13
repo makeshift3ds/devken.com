@@ -1,0 +1,73 @@
+
+<link rel="stylesheet"  type="text/css" href="{$config.site_url}assets/registration.css" />
+<form method='post' action='{$config.site_url}registration' id='registration' onsubmit='return checkRegistration();'>
+	<input type='hidden' name='mode' value='register' />
+		<ul >
+			<li>
+			<label class="description">Account Information </label>
+					<div class="left">
+						<input id="username" name="data[username]" class="element text medium" type="text" maxlength="255" value="{$user_data.username}"/>
+						<label for="username" class='required'>Username</label>
+					</div>
+					<div class="right">
+						<input id="email" name="data[email]" class="element text medium" type="text" maxlength="255" value="{$user_data.email}"/>
+						<label for="email" class='required'>Email Address</label>
+					</div>
+					<div class="left">
+						<input id="password" name="data[password]" class="element text medium" type="password" maxlength="255" value=""/>
+						<label for="element_6" class='required'>Password</label>
+					</div>
+					<div class="right">
+						<input id="password2" name="data[password2]" class="element text medium" type="password" maxlength="255" value=""/>
+						<label for="password2" class='required'>Repeat Password</label>
+					</div>
+				</li>
+			<li>
+			<label class="description">Shipping Information</label>
+				<div class="left">
+					<input id="firstname" name="data[firstname]" class="element text medium" type="text" maxlength="255" value="{$user_data.firstname}"/>
+					<label for="firstname">Firstname</label>
+				</div>
+				<div class="right">
+					<input id="lastname" name="data[lastname]" class="element text medium" type="text" maxlength="255" value="{$user_data.lastname}"/>
+					<label for="lastname">Lastname</label>
+				</div>
+				<div class="left">
+					<input id="phone" name="data[phone]" class="element text medium" type="text" maxlength="255" value="{$user_data.phone}"/>
+					<label for="phone">Phone</label>
+				</div>
+				<div class="right">
+					<input id="fax" name="data[fax]" class="element text medium" type="text" maxlength="255" value="{$user_data.fax}"/>
+					<label for="fax">Fax</label>
+				</div>
+				<div>
+					<input id="address" name="data[address]" class="element text large" value="{$user_data.address}" type="text">
+					<label for="address">Street Address</label>
+				</div>
+				<div>
+					<input id="address2" name="data[address2]" class="element text large" value="{$user_data.address2}" type="text">
+					<label for="address2">Address Line 2</label>
+				</div>
+				<div class="left">
+					<input id="city" name="data[city]" class="element text medium" value="{$user_data.city}" type="text">
+					<label for="city">City</label>
+				</div>
+				<div class="right">
+					<input id="state" name="data[state]" class="element text medium" value="{$user_data.state}" type="text">
+					<label for="state">State / Province / Region</label>
+				</div>
+				<div class="left">
+					<input id="zip" name="data[zip]" class="element text medium" maxlength="15" value="{$user_data.zip}" type="text">
+					<label for="zip">Postal / Zip Code</label>
+				</div>
+				<div class="right">
+						{core assign=countries method=getCategories table=countries}
+						{html_options id='country' options=$countries name=data[country] class='element select medium' selected=$user_data.country|default:'US'}
+				<label for="country">Country</label>
+			</div>
+		</li>
+		<li>
+				<input type="image" src='{$config.image_url}btn_submit_registration.png' class='swap' />
+		</li>
+	</ul>
+</form>

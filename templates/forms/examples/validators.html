@@ -1,0 +1,51 @@
+<div id='test_validators' style='background-color: #EEE;border: 1px solid #CCC; padding: 4px;'>
+	<div style='border: 1px solid #AAA; padding: 4px; position: absolute; top: 0; right: 0; width: 250px;background-color: #fff;'>
+		<h3>Available Classes</h3>
+		Define the validation method with classnames. (ex class="required validate-email")<p />
+
+		Define a datepicker by adding the attribute datepicker='1'<p />
+
+		<tt>
+			required<br />
+			validate-date<br />
+			validate-url<br />
+			validate-email<br />
+			validate-integer<br />
+			validate-numeric<br />
+			validate-digits<br />
+			validate-alpha<br />
+			validate-alphanum<br />
+			validate-currency-dollar<br />
+			<br />
+		</tt>
+	</div>
+	<h2>Testing Validators</h2>
+	<form method='post' action='?' id='test_form' validate='true'>
+		<input type='hidden' name='mode' value='test_form' />
+
+		Firstname : <br />
+		<input type='text' name='firstname' class='required' title='yeah you need a firstname' /><p />
+
+		Birthday : <br />
+		<input type='text' name='birthday' class='validate-date required' datepicker='1' /><p />
+
+		Url : <br />
+		<input type='text' name='url' class='validate-url required' /><p />
+
+		Email : <br />
+		<input type='text' name='email' class='validate-email required'/><p />
+
+		{core assign='states' method='getStates'}
+		State : <br />
+		{html_options name=state options=$states class='required'}<p />
+
+		{core assign='countries' method='getCountries'}
+		Country : <br />
+		{html_options name=country options=$countries class='required'}<p />
+
+		Amount : <br />
+		<input type='text' name='amount' class='required validate-currency-dollar' title='Must be in currency format' /><p />
+
+		<input type='submit' value='shubmit' />
+	</form>
+</div>

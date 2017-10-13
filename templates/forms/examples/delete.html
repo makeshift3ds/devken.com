@@ -1,0 +1,15 @@
+<div id='test_delete_error'></div>
+<div id='widget_test_delete'>
+	<h3>Ajax Delete Example</h3>
+	When deleteing an element remember that the success_element is set to the element that is getting deleted.<br />
+	<table cellpadding='2' cellspacing='0' border='0' width='100%' id='test_delete1'>
+	<tr>
+		<td>
+			Item Number One
+		</td>
+		<td>
+			<a href='{$config.site_url}ajax&mode=test_delete&id=1' xhr_type='delete' target_element='test_delete1' success_element='message_box' fail_element='message_box' xhr_preload='false'>Delete This Item</a>
+		</td>
+	</tr>
+	</table>
+</div>

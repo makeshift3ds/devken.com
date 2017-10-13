@@ -1,0 +1,74 @@
+{core assign=shipping_address method=getTable table=addresses where="user_id = `$smarty.session.user.table_users.id` and default_address=1" limit=1 list=1}
+
+<link rel="stylesheet"  type="text/css" href="{$config.site_url}assets/registration.css" />
+<form method='post' action='{$config.site_url}account' id='account' onsubmit='return checkAccountInfo();'>
+	<input type='hidden' name='mode' value='update' />
+		<ul >
+			<li>
+			<label class="description">Account Information </label>
+					<div class="left">
+						{$account_info.username}<br />
+						<label for="username" class='required'>Username</label>
+					</div>
+					<div class="right">
+						{$account_info.email}
+						<label for="email" class='required'>Email Address</label>
+					</div>
+					<div class="left">
+						<input id="password" name="data[password]" class="element text medium" type="password" maxlength="255" value=""/>
+						<label for="password">New Password</label>
+					</div>
+					<div class="right">
+						<input id="password2" name="data[password2]" class="element text medium" type="password" maxlength="255" value=""/>
+						<label for="password2">Repeat New Password</label>
+					</div>
+				</li>
+			<li>
+			<label class="description">Shipping Information</label>
+				<div class="left">
+					<input id="firstname" name="data[firstname]" class="element text medium" type="text" maxlength="255" value="{$shipping_address.firstname}"/>
+					<label for="firstname">Firstname</label>
+				</div>
+				<div class="right">
+					<input id="lastname" name="data[lastname]" class="element text medium" type="text" maxlength="255" value="{$shipping_address.lastname}"/>
+					<label for="lastname">Lastname</label>
+				</div>
+				<div class="left">
+					<input id="phone" name="data[phone]" class="element text medium" type="text" maxlength="255" value="{$shipping_address.phone}"/>
+					<label for="phone">Phone</label>
+				</div>
+				<div class="right">
+					<input id="fax" name="data[fax]" class="element text medium" type="text" maxlength="255" value="{$shipping_address.fax}"/>
+					<label for="fax">Fax</label>
+				</div>
+				<div>
+					<input id="address" name="data[address1]" class="element text large" value="{$shipping_address.address}" type="text">
+					<label for="address">Street Address</label>
+				</div>
+				<div>
+					<input id="address2" name="data[address2]" class="element text large" value="{$shipping_address.address2}" type="text">
+					<label for="address2">Address Line 2</label>
+				</div>
+				<div class="left">
+					<input id="city" name="data[city]" class="element text medium" value="{$shipping_address.city}" type="text">
+					<label for="city">City</label>
+				</div>
+				<div class="right">
+					<input id="state" name="data[state]" class="element text medium" value="{$shipping_address.state}" type="text">
+					<label for="state">State / Province / Region</label>
+				</div>
+				<div class="left">
+					<input id="zip" name="data[zip]" class="element text medium" maxlength="15" value="{$shipping_address.zip}" type="text">
+					<label for="zip">Postal / Zip Code</label>
+				</div>
+				<div class="right">
+					{core assign=countries method=getCategories table=countries}
+					{html_options options=$countries name=data[country] class='element select medium' selected=$shipping_address.country|default:'US'}
+				<label for="country">Country</label>
+			</div>
+		</li>
+		<li>
+				<input type="image" src='{$config.image_url}btn_update_account.png' class='over' />
+		</li>
+	</ul>
+</form>

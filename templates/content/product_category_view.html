@@ -1,0 +1,57 @@
+
+ {* get a list from the products table *}
+{core
+	assign=pages
+	method=getTable
+	table=products
+	join=products_to_categories
+	join_id=product_id
+	limit=$config.product_limit|default:10
+	page=$smarty.request.page|default:1
+	order='weight asc'
+	where="products.active=1 and products_to_categories.category_id=`$smarty.request.id`"
+}
+
+ {* get the pagination information *}
+{core
+	assign=pagination
+	method=getPagination
+	table=products
+	join=products_to_categories
+	join_id=category_id
+	limit=$config.product_limit|default:10
+	page=$smarty.request.page|default:1
+	where="products.active=1 and products_to_categories.category_id=`$smarty.request.id`"
+}
+
+{*
+<h1>{$page.title}</h1>
+{$page.description}
+*}
+{if $pagination.pages > 1}
+	{* only show pagination if there is more than one page *}
+	<div class='list-table-pagination'>
+		<div class='prev'><a href='{$config.site_url}product_category&id={$smarty.request.id}&page={$pagination.prev}'>Prev</a></div>
+		<div class='pages'>Page {$smarty.request.page|default:1} of {$pagination.pages}</div>
+		<div class='next'><a href='{$config.site_url}product_category&id={$smarty.request.id}&page={$pagination.next}'>Next</a></div>
+	</div>
+{/if}
+
+<div id='product_category_list'>
+	{foreach item=t from=$pages}
+		<div class='product_container'>
+		<a href='{$config.site_url}products&id={$t.id}'>{$t.title|truncate:'150':'..'}</a>
+		{if $smarty.request.id == '8'}
+			{core assign=dates method=getTable table=events_to_products where="product_id = `$t.id`"}
+			{if count($dates) == 0}
+				<span class='smaller'>(No Dates Available)</span>
+			{elseif count($dates) == 1}
+				<span class='smaller'>(1 Date Available)</span>
+			{else}
+				{$dates|@count} Dates Available
+			{/if}
+		{/if}
+		<p>{$t.description|strip_tags|truncate:'300':".."}</p>
+		</div>
+	{/foreach}
+</div>

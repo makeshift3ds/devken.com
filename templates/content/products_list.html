@@ -1,0 +1,26 @@
+{*
+{core assign=products method=getTable table=products}
+
+{if !$smarty.request.id}
+	{core assign=product method=getTable table=products limit='1' list=1}
+	{foreach item=p from=$products name='products'}
+		<a href='{$config.site_url}products&id={$p.id}'>{$p.title}</a><br />
+	{/foreach}
+{else}
+	{core assign=products method=getTable table=products where='active=1'}
+	{core assign=product method=getTable table=products limit='1' list=1 where="id=`$smarty.request.id`"}
+	{core assign=product_descriptions method=getTable table=product_descriptions join=products_to_descriptions where="products_to_descriptions.product_id = `$product.id`" join_id='description_id'}
+	<h1>{$product.title}</h1>
+	{$product.description}
+	<div id='product_description_container'>
+		{foreach item=d from=$product_descriptions name='product_descriptions'}
+			<div class='description_tab' tab_group='product_descriptions' tab='description{$d.id}' tab_style='horizontal'>{$d.title}</div>
+		{/foreach}
+		<div id='product_description_scroller'>
+			{foreach item=d from=$product_descriptions name='product_descriptions'}
+				<div class='description_window' id='description{$d.id}'>{$d.description}</div>
+			{/foreach}
+		</div>
+	</div>
+{/if}
+*}

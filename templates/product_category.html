@@ -1,0 +1,8 @@
+{include file="components/main_header.html"}
+{include file="components/main_template.html"}
+{if $smarty.request.id}
+	{include file="content/product_category_view.html"}
+{else}
+	{include file="content/product_category_list.html"}
+{/if}
+{include file="components/main_footer.html"}

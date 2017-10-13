@@ -1,0 +1,25 @@
+{core assign=orders method=getTable table=orders where="user_id = `$account_info.id`"}
+{core assign=status_types method=getCategories table=order_status_types}
+
+{if !count($orders)}
+	<span class='red'>There are no recent orders for this account</span>
+{else}
+<table class='list-table'>
+<tr>
+	<th style='width:463px;'>Date</th>
+	<th style='width:54px;'>Items</th>
+	<th>Total</th>
+	<th>Status</th>
+</tr>
+{foreach item=order from=$orders}
+	{if $order.status}
+	<tr>
+		<td><a href='{$config.site_url}orders&id={$order.id}'>{$order.description}</a></td>
+		<td>{$order.items}</td>
+		<td>{$order.total|money_format}</td>
+		<td>{$status_types[$order.status]|default:'Unknown'}</td>
+	</tr>
+	{/if}
+{/foreach}
+</table>
+{/if}

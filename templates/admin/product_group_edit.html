@@ -1,0 +1,80 @@
+{include file=admin/admin_header.html}
+
+<form method='post' action='{$config.site_url}admin/product_handler.php' />
+{if $smarty.request.id}
+	{* update page *}
+	{core assign=page method=getContent pageid=product_group_edit}
+	{core assign=tips method=getContent pageid=product_group_edit_tips}
+	{core assign=data method=getTable table=product_groups list=1 where="id=`$smarty.request.id`"}
+	<input type='hidden' name='mode' value='update_product_group' />
+	<input type='hidden' name='data[id]' value='{$smarty.request.id}' />
+{else}
+	{* add page *}
+	{core assign=page method=getContent pageid=product_group_add}
+	{core assign=tips method=getContent pageid=product_group_add_tips}
+	<input type='hidden' name='mode' value='insert_product_group' />
+	<input type='hidden' name='data[active]' value='1' />
+{/if}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+<table class='list-table'>
+<tr>
+	<th>Price</th>
+	<td><input type='text' name='data[price]' value='{$data.price}' style='width:100%;' /></td>
+	<th>PASS Price</th>
+	<td><input type='text' name='data[price2]' value='{$data.price2}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Title</th>
+	<td colspan='3'><input type='text' name='data[title]' value='{$data.title}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Description</th>
+	<td colspan='3'><textarea name='data[description]' style='width:100%;height:225px;' id='wysiwyg' >{$data.description}</textarea></td>
+</tr>
+</table>
+<input type='submit' value='submit' />
+</form>
+
+{if $data.id}
+	{* Product Categories *}
+	<h2 class='toggle' target='locations_container'>Products</h2>
+	{core
+		assign=cats
+		method=getTable
+		table=products
+		join=products_to_groups
+		where="products_to_groups.group_id = `$smarty.request.id` and products.active=1"
+		join_id=product_id
+		order='weight asc'
+	}
+	<div id='locations_container'>
+		<table class='list-table'>
+			<tr>
+				<th>Product</th>
+				<th>Actions</th>
+			</tr>
+				{if count($cats)}
+					{foreach item=c from=$cats}
+						<tr>
+							<td>
+								{$c.title}
+							</td>
+							<td>
+								<a href='{$config.site_url}admin/product_handler.php?mode=remove_product_to_group&data[group_id]={$data.id}&data[product_id]={$c.id}&redir=group'>Delete</a>
+							</td>
+						</tr>
+					{/foreach}
+				{else}
+					<tr>
+						<td colspan='2'>
+							No products assigned. Go to the products to add them to groups.
+						</td>
+					</tr>
+				{/if}
+		</table>
+	</div>
+	{/if}
+
+{include file=admin/admin_footer.html}

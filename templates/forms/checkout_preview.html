@@ -1,0 +1,109 @@
+
+<div id='order_view_left'>
+	<h2>Shipping Address</h2>
+	<div>
+		{$smarty.session.checkout_info.firstName} {$smarty.session.checkout_info.lastName}<br />
+		{$account_info.email}<br />
+		{$smarty.session.checkout_info.shipping_address}<br />
+		{if $smarty.session.checkout_info.shipping_address2}{$smarty.session.checkout_info.shipping_address2}<br />{/if}
+		{$smarty.session.checkout_info.shipping_city}, {$smarty.session.checkout_info.shipping_state} {$smarty.session.checkout_info.shipping_zip}<br />
+		{core assign=country method=getTable table=countries where="id = '`$smarty.session.checkout_info.shipping_country`'" list=1}
+		{$country.title}
+	</div>
+</div>
+<div id='order_view_right'>
+	<h2>Shipping Information</h2>
+	<div>
+		<strong>From:</strong><br />
+		{$config.shipper_postal_code}, {$config.shipper_country_code}<p />
+		<strong>Method:</strong><br />
+		{core assign=st method=getTable table=fedex_services where="id = '`$smarty.session.order_data.service_type`'" list=1}
+		Fedex {$st.title}
+	</div>
+</div>
+	{cart method=getCart assign=cart}
+	<table class='list-table' id='cart-table'>
+	<tr>
+		<th style='width:463px;'>Description</th>
+		<th style='width:54px;text-align:center;'>Qty</th>
+		<th style='width:75px;text-align:center;'>Each</th>
+		<th style='text-align:center;'>Total</th>
+	</tr>
+	{foreach item=c from=$cart name=cart key=key}
+		{if $c.id != ''}
+			{core assign=p method=getTable table=products where="id = `$c.id`" list=1}
+			{if $p.parent_id}
+				{core assign=pd method=getTable table=products where="id = `$p.parent_id`" list=1}
+			{/if}
+			<tr>
+				<td>
+						{if $p.parent_id}
+							<strong>{$p.title}</strong><br />
+							{$pd.description|strip_tags|truncate:'100':'..'}
+						{else}
+							<strong>{$p.title}</strong><br />
+							{if $c.event_id}
+								{core assign=event method=getTable table=events where="id=`$c.event_id`" list=1}
+								<strong>{$event.start_date|date_format}{if $event.end_date != $event.start_date} - {$event.end_date|date_format}{/if}</strong><br />
+							{/if}
+							{$p.description|strip_tags|truncate:'100':'..'}
+						{/if}
+				</td>
+				<td class='list-table-center'>{$c.qty}</td>
+				{if ($account_info.type_id == 1 || $account_info.type_id == 3) && $p.price != $p.price2}
+					<td class='list-table-center'><strike><small>{$p.price|money_format}</small></strike><br /><strong class='red'>{$p.price2|money_format}</strong></td>
+					<td class='list-table-center'><strike><small>{$p.price*$c.qty|money_format}</small></strike><br /><strong class='red'>{$p.price2*$c.qty|money_format}</strong></td>
+				{else}
+					<td class='list-table-center'>{$p.price|money_format}</td>
+					<td class='list-table-center'>{$p.price*$c.qty|money_format}</td>
+				{/if}
+			</tr>
+		{/if}
+	{/foreach}
+	{if !$c}
+		<tr>
+			<td colspan='5' style='text-align:center;'>
+				No products have been added yet.
+			</td>
+		</tr>
+	{/if}
+	</table>
+	<div id='cart_footer_left'>
+
+	</div>
+	<div id='cart_footer_right'>
+		<table cellpadding='0' cellspacing='0' border='0' id='cart_totals'>
+			{if $totals.subtotal > 0}<tr><th align='right'>Subtotal :</th><td align='left'>{$totals.subtotal|money_format}</td></tr>{/if}
+			{if $totals.discount > 0}<tr><th class='red' align='right'>PASS Discount :</th><td class='red' align='left'>-{$totals.discount|money_format}</td></tr>{/if}
+			{if $totals.tax}<tr><th align='right'>Tax :</th><td align='left'>{$totals.tax|money_format}</td></tr>{/if}
+			{if $totals.weight > 0}
+					{if count($totals.shipping)}
+						<tr>
+							<th align='right'>
+								Shipping to {$smarty.session.order_data.country}:
+							</th>
+							<td align='left'>
+								{$totals.shipping[$smarty.session.order_data.service_type]|money_format}
+							</td>
+						</tr>
+					{else}
+						<tr><th align='right'>Shipping :</th><td align='left'>
+							<a href='{$config.site_url}lightbox/cart_shipping' class='ajax_lightbox' lbx='340' lby='200' title='Update Shipping Information' alt='Update Shipping Information'>Calculate</a>
+						</td></tr>
+					{/if}
+			{/if}
+			<tr>
+				<th align='right'>Total :</th>
+				<td align='left'>
+					{$totals.total|money_format}
+				</td>
+			</tr>
+		</table>
+		<br clear='all' />
+	</div>
+
+	{if $totals.total > 0}
+		<div style='text-align:right;padding-top:10px;clear:both;' id='checkout_btn'>
+			<a href='{$config.site_url}checkout&mode=process_checkout' style='color:inherit;text-decoration:none;' ><img src='{$config.image_url}btn_checkout.png' alt='Checkout' title='Checkout' class='swap' /></a>
+		</div>
+	{/if}

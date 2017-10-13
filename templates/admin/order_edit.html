@@ -1,0 +1,69 @@
+{include file=admin/admin_header.html}
+
+<form method='post' action='{$config.site_url}admin/order_handler.php' />
+{if $smarty.request.id}
+	{* update page *}
+	{core assign=page method=getContent pageid=order_edit}
+	{core assign=tips method=getContent pageid=order_edit_tips}
+	{core assign=data method=getTable table=orders list=1 where="id=`$smarty.request.id`"}
+	<input type='hidden' name='mode' value='update_order' />
+	<input type='hidden' name='data[id]' value='{$smarty.request.id}' />
+{else}
+	{* add page *}
+	{core assign=page method=getContent pageid=order_add}
+	{core assign=tips method=getContent pageid=order_add_tips}
+	<input type='hidden' name='mode' value='insert_order' />
+{/if}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+<table class='list-table'>
+<tr>
+	<th>Date Added</th>
+	<td><input type='text' name='data[date_added]' value='{$data.date_added}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>User</th>
+	<td><input type='text' name='data[user_id]' value='{$data.user_id}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Items</th>
+	<td><input type='text' name='data[items]' value='{$data.items}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Subtotal</th>
+	<td><input type='text' name='data[subtotal]' value='{$data.subtotal}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Shipping</th>
+	<td><input type='text' name='data[shipping]' value='{$data.shipping}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Tax</th>
+	<td><input type='text' name='data[tax]' value='{$data.tax}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Discount</th>
+	<td><input type='text' name='data[discount]' value='{$data.discount}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Total</th>
+	<td><input type='text' name='data[total]' value='{$data.total}' style='width:100%;' /></td>
+</tr>
+<tr>
+	<th>Shipping Address</th>
+	<td><textarea name='data[shipping_address]' style='width:100%;height:100px;'>{$data.shipping_address}</textarea></td></td>
+</tr>
+<tr>
+	<th>Comments</th>
+	<td><textarea name='data[shipping_address]' style='width:100%;height:100px;'>{$data.comments}</textarea></td>
+</tr>
+<tr>
+	<th>Status</th>
+	<td><input type='text' name='data[status]' value='{$data.status}' style='width:100%;' /></td>
+</tr>
+</table>
+<input type='submit' value='submit' />
+</form>
+
+{include file=admin/admin_footer.html}

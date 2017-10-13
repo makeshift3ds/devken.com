@@ -1,0 +1,157 @@
+{core assign=products method=getTable table=products}
+
+{if !$smarty.request.id}
+	{core assign=product method=getTable table=products limit='1' list=1}
+	{foreach item=p from=$products name='products'}
+		<a href='{$config.site_url}products&id={$p.id}'>{$p.title}</a><br />
+	{/foreach}
+{else}
+	{core assign=products method=getTable table=products where='active=1'}
+	{core assign=product method=getTable table=products limit='1' list=1 where="id=`$smarty.request.id`"}
+	{core assign=product_descriptions method=getTable table=product_descriptions join=products_to_descriptions where="products_to_descriptions.product_id = `$product.id`" join_id='description_id'}
+	<h1>{$product.title}</h1>
+	{$product.description}
+	<div id='product_description_container'>
+		{foreach item=d from=$product_descriptions name='product_descriptions'}
+			<div class='description_tab' tab_group='product_descriptions' tab='description{$d.id}' tab_style='horizontal'>{$d.title}</div>
+		{/foreach}
+		<div id='product_description_scroller'>
+			{foreach item=d from=$product_descriptions name='product_descriptions'}
+				<div class='description_window' id='description{$d.id}'>{$d.description}</div>
+			{/foreach}
+		</div>
+	</div>
+{/if}
+
+{*	{core assign=products method=getTable table=products}
+	{if !$smarty.request.id}
+		{core assign=product method=getTable table=products limit='1' list=1}
+	{else}
+		{core assign=product method=getTable table=products limit='1' list=1 where="id=`$smarty.request.id`"}
+	{/if}
+<div id='content_scroller' style='width:669px;height:236px;'>
+	{core assign=imgs method=getTable table=product_images join=products_to_images where="products_to_images.product_id = `$product.id`" order='weight asc' join_id='image_id'}
+	{assign var=img_count value=$imgs|@count}
+
+	<div id='product_image'>
+		<img src='{$config.image_url}product_images/page/{$imgs.0.filename}' alt='{$product.title}' id='main_image' title='{$product.description|strip_tags}' />
+		<div id='product_title'>
+			{$product.title}<br />
+			<span>{$product.description}</span>
+		</div>
+		<div id='image_title'>
+			{$imgs.0.title}
+		</div>
+	</div>
+	<div id='product_image_list'>
+		{math assign=w equation="ceil(x/9)*y" x="$img_count" y=246}
+		<div id='product_image_scroller' style='width:{$w}px;'>
+			<div id='img_page_1' class='pgs'>
+				{assign var=pg_cnt value=1}
+				{foreach item=img from=$imgs name=imgs}
+					<img src='{$config.image_url}product_images/thumb/{$img.filename}' alt='{$img.title}' image_id='{$img.id}' title='{$img.title}' target='main_image' target_src='{$config.image_url}product_images/page/{$img.filename}' />
+					{if $smarty.foreach.imgs.iteration == 9}
+						</div>
+						<div id='img_page_{$pg_cnt+1}' class='pgs'>
+					{/if}
+				{/foreach}
+			</div>
+		</div>
+	</div>
+		{math assign=image_pages equation='ceil(x/9)' x=$img_count}
+	{if $image_pages > 1}
+	<div id='image_pages'>
+		<img src='{$config.image_url}pg_prev.gif' alt='Previous Page' id='pg_prev' target='1' max_target='1' /> <span id='current_page'>1</span> of {$image_pages} <img src='{$config.image_url}pg_next.gif' alt='Next page' id='pg_next' target='2' max_target='5' />
+	</div>
+	{/if}
+</div>
+<div id='product_scroller'>
+	{foreach item=p from=$products name='products'}
+		{core assign=i method=getTable table=product_images join=products_to_images where="products_to_images.product_id = `$p.id`" order='weight asc' join_id='image_id' limit='1' list='1'}
+		{if $p.id == $product.id}
+			<img src='{$config.image_url}product_images/list/{$i.filename}' alt='' id='product_{$smarty.foreach.products.iteration}' title='{$p.title}' />
+		{else}
+			<a href='{$config.site_url}leathers/{$p.id}/{$p.title|urlencode}.html' title='{$p.title}' ><img src='{$config.image_url}product_images/thumb_washed/{$i.filename}' alt='' id='product_{$smarty.foreach.products.iteration}' /></a>
+		{/if}
+	{/foreach}
+</div>
+<div id='product_pages'>
+	<img src='{$config.image_url}pg_prev.gif' alt='Previous Product' id='product_prev' target='1' /> <img src='{$config.image_url}pg_next.gif' alt='Next Product' id='product_next' target='2' />
+</div>
+<div id='order_sample'>
+	<form method='post' action='{$config.site_url}cart'>
+		<input type='hidden' name='mode' value='add' />
+		<input type='hidden' name='id' value='{$product.id}' />
+		<input type='hidden' name='image_id' value='{$imgs.0.id}' id='image_id' />
+		<input type='image' src='{$config.image_url}btn_order_sample.gif' />
+	</form>
+</div>
+*}
+
+{* TABLE EXPLORER
+<table cellpadding='10' cellspacing='0' border='0'>
+<tr>
+	<td style='background-color:#EEE;width:170px;' valign='top'>
+		<h3>Tables</h3>
+		<ul style='margin:0;padding:0;list-style-type:none;'>
+			<li> <a href='{$config.site_url}products&table=carts'>Carts</a></li>
+			<li> <a href='{$config.site_url}products&table=cart_items'>Cart Items</a></li>
+			<li> <a href='{$config.site_url}products&table=gift_certificates'>Gift Certificates</a></li>
+			<li> <a href='{$config.site_url}products&table=products'>Products</a></li>
+			<li> <a href='{$config.site_url}products&table=product_images'>Product Images</a></li>
+			<li> <a href='{$config.site_url}products&table=product_image_galleries'>Product Image Galleries</a></li>
+			<li> <a href='{$config.site_url}products&table=product_reviews'>Product Reviews</a></li>
+			<li> <a href='{$config.site_url}products&table=product_tags'>Product Tags</a></li>
+			<li> <a href='{$config.site_url}products&table=promotional_codes'>Promotional Codes</a></li>
+			<li> <a href='{$config.site_url}products&table=users'>Users</a></li>
+			<li> <a href='{$config.site_url}products&table=user_config'>User Config</a></li>
+			<li> <a href='{$config.site_url}products&table=user_data'>User Data</a></li>
+			<li> <a href='{$config.site_url}products&table=user_favorites'>User Favorites</a></li>
+		</ul>
+	</td>
+	<td valign='top'>
+		<h1>Add to Table : {$smarty.request.table}</h1>
+		{core assign=cols method=getTableColumns table=$smarty.request.table database=$config.db_name}
+		<form method='post' action='{$config.site_url}products'>
+			<input type='hidden' name='mode' value='add_product' />
+			<input type='hidden' name='table' value='{$smarty.request.table}' />
+			{foreach item=k from=$cols}
+				{if $k.column_name != 'id' && $k.column_name != 'date_modified'}
+					{$k.column_name}<br />
+					<input type='text' name='data[{$k.column_name}]' value='
+					{if ($k.data_type == 'int' || $k.data_type == 'decimal') && $k.column_name != 'user_id'}
+						{randnum min=1 max=100 decimals=0}
+					{elseif $k.data_type == 'tinyint' || $k.column_name == 'user_id'}
+						1
+					{elseif $k.data_type == 'timestamp'}
+						now()
+					{else}
+						{$k.column_name}
+					{/if}
+					'><p />
+				{/if}
+			{/foreach}
+			<input type='submit' value='Submit' />
+		</form><p />
+
+		{core assign=rows method=getTable table=$smarty.request.table limit='10 ' }
+
+		<table cellpadding='2' cellspacing='0' border='0'>
+			<tr style='background-color:#CCC;font-weight:bold;'>
+				{foreach item=k from=$cols}
+					<td>{$k.column_name}</td>
+				{/foreach}
+			</tr>
+			{foreach item=r from=$rows}
+				<tr style='background-color: {cycle values="#EEE,#FFF"};'>
+					{foreach item=k from=$cols}
+						<td>{$r[$k.column_name]}</td>
+					{/foreach}
+				</tr>
+			{/foreach}
+		</table>
+	</td>
+</tr>
+</table>
+
+*}

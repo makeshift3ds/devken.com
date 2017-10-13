@@ -1,0 +1,43 @@
+<div id='link_submit'>
+	<div id='btn_link_submit' class='toggle' target='link_submit_form'>- Submit a Link -</div>
+	<div id='link_submit_form'>
+		<form method='post' action='{$config.site_url}links'>
+		<input type='hidden' name='mode' value='submit_link' />
+		<p>
+			<strong>Your Name:</strong><br />
+			<input type='text' name='data[name]' />
+		</p>
+		<p>
+			<strong>Email Address:</strong><br />
+			<input type='text' name='data[email]' />
+		</p>
+		<p>
+			<strong>Fax: <small>(include country/area code)</small>:</strong><br />
+			<input type='text' name='data[fax]' />
+		</p>
+		<p>
+			<strong>Your URL:</strong><br />
+			<input type='text' name='data[url]' />
+		</p>
+		<p>
+			<strong>Title of Your Webpage:</strong><br />
+			<input type='text' name='data[title]' />
+		</p>
+		<p>
+			<strong>Description:</strong><br />
+			<input type='text' name='data[description]' />
+		</p>
+		<p style='width:572px;'>
+			<strong>Where is your link to {$config.site_url}? : </strong><br />
+			<input type='text' name='data[links_page]' />
+		</p>
+		<br clear='all' />
+		<input type='image' src='{$config.image_url}btn_submit.gif' id='btn_submit' />
+		</form>
+	</div>
+</div>
+		{*
+		{core assign=page method=getContent pageid=home}
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+*}

@@ -1,0 +1,57 @@
+{include file=admin/admin_header.html}
+
+ {* get the main content *}
+{core assign=page method=getContent pageid=blog_list}
+ {* get the tip content (footer checks for $tip) *}
+{core assign=tips method=getContent pageid=blog_list_tips}
+ {* get a list from the pages table *}
+{core assign=pages method=getTable table=blog_posts limit=$config.admin_page_limit|default:80  page=$smarty.request.page|default:1 order='publish_date desc'}
+ {* get the pagination information *}
+{core assign=pagination method=getPagination table=blog_posts limit=$config.admin_page_limit|default:80 page=$smarty.request.page|default:1}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+
+{if $pagination.pages > 1}
+	{* only show pagination if there is more than one page *}
+	<div class='list-table-pagination'>
+		<div class='prev'><a href='{$config.site_url}admin/blog_list.php?page={$pagination.prev}'>Prev</a></div>
+		<div class='pages'>Page {$smarty.request.page|default:1} of {$pagination.pages}</div>
+		<div class='next'><a href='{$config.site_url}admin/blog_list.php?page={$pagination.next}'>Next</a></div>
+	</div>
+{/if}
+<table class='list-table'>
+<tr>
+	<th>Title</th>
+	<th>Categories</th>
+	<th style='width:92px;text-align:center;'>Published</th>
+	<th style='width:100px;text-align:center;'>Actions</th>
+</tr>
+	{foreach item=t from=$pages}
+		{core assign=cats cols='title' method=getTable table=blog_categories join=blog_posts_to_categories join_id=category_id where="blog_posts_to_categories.blog_id = `$t.id`"}
+	<tr>
+		<td><a href='{$config.site_url}blog/{$t.slug}'>{$t.title|truncate:50:'..':true}</a></td>
+		<td>
+				{assign var=cnt value=$cats|count}
+				{if $cnt.1}
+					<span class='green'>Multiple Categories</span>
+				{elseif $cnt.0}
+					{$cats.0.title}
+				{else}
+					<span class='red'>Unassigned</span>
+				{/if}
+		</td>
+		<td style='text-align:right;'>{$t.publish_date|date_format:'%m/%d/%Y'}</td>
+		<td style='text-align:right;'><a href='{$config.site_url}admin/blog_edit.php?id={$t.id}'>Edit</a> : <a href='{$config.site_url}admin/blog_handler.php?mode=remove_post&id={$t.id}'>Delete</a></td>
+	</tr>
+	{/foreach}
+	{if !count($pages)}
+	<tr>
+		<td colspan='4' align='center'>
+			No Entries Available
+		</td>
+	</tr>
+	{/if}
+</table>
+
+{include file=admin/admin_footer.html}

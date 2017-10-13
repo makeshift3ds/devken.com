@@ -1,0 +1,19 @@
+{include file=admin/admin_header.html}
+
+ {* get the main content *}
+{core assign=page method=getContent pageid=excel_import}
+ {* get the tip content (footer checks for $tip) *}
+{core assign=tips method=getContent pageid=excel_import_tips}
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+
+<table class='list-table'>
+<tr>
+	<th>File Upload</th>
+</tr>
+	<tr>
+		<td><input type='file' name='excel_file' /></td>
+	</tr>
+</table>
+
+{include file=admin/admin_footer.html}

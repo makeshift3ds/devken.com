@@ -1,0 +1,125 @@
+{* first get the page id from the script name *}
+{assign var=pgx value=$SCRIPT_NAME|explode:'/'}
+{assign var=fl value=$pgx.2|explode:'.'}
+{assign var=page_id value=$fl.0}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$config.site_name}</title>
+<link rel="stylesheet"  type="text/css" href="{$config.site_url}assets/base.css" />
+<link rel="stylesheet"  type="text/css" href="{$config.site_url}assets/admin-site.css" />
+<link rel="stylesheet"  type="text/css" href="{$config.site_url}assets/plugins/squeezebox/SqueezeBox/SqueezeBox.css" />
+<!--[if gt IE 6]>
+<link rel="stylesheet"  type="text/css" href="{$config.site_url}assets/ie.css" />
+<![endif]-->
+<!--[if lt IE 7]>
+<link rel="stylesheet"  type="text/css" href="{$config.site_url}assets/ie6.css" />
+<![endif]-->
+<script type="text/javascript">
+	var CKEDITOR_BASEPATH = '/assets/plugins/ckeditor/';
+</script>
+<script type="text/javascript" src="{$config.site_url}assets/plugins/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="{$config.site_url}assets/framework_testing.js"></script>
+<script type="text/javascript" src="{$config.site_url}assets/base.js"></script>
+{if $page_id == 'media_edit'}<script type="text/javascript" src="{$config.site_url}assets/media_edit.js"></script>{/if}
+<script type="text/javascript" language="Javascript" src="{$config.site_url}assets/plugins/cycleCarousel/cycleCarousel.js"></script>
+{if $config.use_SqueezeBox}
+	<script type="text/javascript" src="{$config.site_url}assets/plugins/squeezebox/SqueezeBox.js"></script>
+{/if}
+
+{if $config.use_FancyUpload}
+		<script type="text/javascript" src="{$config.site_url}assets/plugins/fancyUpload/source/Swiff.Uploader.js"></script>
+		<script type="text/javascript" src="{$config.site_url}assets/plugins/fancyUpload/source/Fx.ProgressBar.js"></script>
+		<script type="text/javascript" src="{$config.site_url}assets/plugins/fancyUpload/source/FancyUpload2.js"></script>
+		<script type="text/javascript" src="{$config.site_url}assets/plugins/fancyUpload/source/FancyUpload3.Attach.js"></script>
+{/if}
+<script type="text/javascript">
+	Clientcide.setAssetLocation('{$config.site_url}assets/clientcide/global');
+		{* literal}
+				tinyMCE.init({
+					mode : "exact",
+					elements : "wysiwyg,wysiwyg0,wysiwyg1,wysiwyg2,wysiwyg3,wysiwyg4,wysiwyg5,wysiwyg6",
+					file_browser_callback : "fileBrowserCallBack",
+					theme : "advanced",
+					content_css : '{/literal}{$config.site_url}{literal}assets/tinymce_styles.css',
+					theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,link,unlink,image,cleanup,code,styleselect,formatselect,forecolor",
+					theme_advanced_buttons2 : "justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,outdent,indent,hr,removeformat,sub,sup,charmap",
+					theme_advanced_buttons3 : '',
+					theme_advanced_toolbar_location : "bottom",
+					theme_advanced_toolbar_align : "left",
+					theme_advanced_resizing : true
+				});
+
+				function fileBrowserCallBack(field_name, url, type, win) {
+					var connector = "../../filemanager/browser.html?Connector=connectors/php/connector.php";
+					var enableAutoTypeSelection = true;
+					var cType;
+					tinyfck_field = field_name;
+					tinyfck = win;
+
+					switch (type) {
+						case "image":
+							cType = "Image";
+							break;
+						case "flash":
+							cType = "Flash";
+							break;
+						case "file":
+							cType = "File";
+							break;
+					}
+
+					if (enableAutoTypeSelection && cType) {
+						connector += "&Type=" + cType;
+					}
+
+					window.open(connector, "tinyfck", "modal,width=600,height=400");
+		} *}
+		{literal}
+		window.addEvent('domready', function(){
+			CKEDITOR.replace( 'data[content]',	{
+			});
+		{/literal}
+				{* setXHR(); *}
+				{* setSqueezeBox();*}
+				{* setTabs();*}
+				setTextDefaults();
+				setSubnavs();
+				setToggles();
+				setCycleCarousel();
+				var zebraTables = new ZebraTable();
+				{* Form Functions *}
+				{if $page_id == 'navigation_edit'}navigationEdit();{/if}
+				{if $page_id == 'event_edit'}eventEdit();{/if}
+				{if $page_id == 'media_edit'}
+				setYoutubeThumbnailUploader();
+				setThumbNailUploader();
+				setMediaUploader();{/if}
+				setDeletes();
+		{literal}
+		});
+		{/literal}
+</script>
+
+<body>
+<div id="layout">
+	<div id='header'>
+		<a href='{$config.site_url}admin'><img src='{$config.image_url}admin/admin_logo.jpg' alt='' id='admin_logo' /></a>
+		<div id='header_links'>
+			<ul>
+				<li>You are logged in as <a href='{$config.site_url}admin/user_edit.php?id={$account_info.id}'>{$account_info.username|ucwords}</a></li>
+				<li><a href='{$config.site_url}login&mode=logout'>Logout</a></li>
+				<li><a href='{$config.site_url}'>Go to Website</a></li>
+			</ul>
+		</div>
+		{include file='../templates/admin/nav_structure.html'}
+	</div>
+	<br clear='both' />
+	<div id='content'>
+		{if $success_msg}
+			<div class='admin_success'>{$success_msg}</div>
+		{elseif $error_msg}
+			<div class='admin_error'>{$error_msg}</div>
+		{/if}

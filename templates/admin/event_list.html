@@ -1,0 +1,43 @@
+{include file=admin/admin_header.html}
+
+ {* get the main content *}
+{core assign=page method=getContent pageid=event_list}
+ {* get the tip content (footer checks for $tip) *}
+{core assign=tips method=getContent pageid=event_list_tips}
+ {* get a list from the pages table *}
+{core assign=pages method=getTable table=events limit=$config.admin_event_limit|default:10  page=$smarty.request.page|default:1 order='cat_id desc, start_date asc' where='active=1'}
+ {* get the pagination information *}
+{core assign=pagination method=getPagination table=events limit=$config.admin_event_limit|default:10 page=$smarty.request.page|default:1 where='active=1'}
+
+<h1>{$page.title}</h1>
+<p>{$page.content}</p>
+
+{if $pagination.pages > 1}
+	{* only show pagination if there is more than one page *}
+	<div class='list-table-pagination'>
+		<div class='prev'><a href='{$config.site_url}admin/event_list.php?page={$pagination.prev}'>Prev</a></div>
+		<div class='pages'>Page {$smarty.request.page|default:1} of {$pagination.pages}</div>
+		<div class='next'><a href='{$config.site_url}admin/event_list.php?page={$pagination.next}'>Next</a></div>
+	</div>
+{/if}
+<table class='list-table'>
+<tr>
+	<th>Title</th>
+	<th>Category</th>
+	<th style='text-align:center;'>Dates</th>
+	<th style='text-align:center;'>Auto Remove</th>
+	<th style='width:100px;text-align:center;'>Actions</th>
+</tr>
+	{foreach item=t from=$pages}
+		{core assign=cat method=getTable table=event_categories where="id=`$t.cat_id`" list=1}
+	<tr>
+		<td>{$t.title|truncate:'50':'..'}</td>
+		<td>{$cat.title}</td>
+		<td style='width:110px;'><strong>Start:</strong> {$t.start_date|date_format:'%m/%d/%y'} <br /> <strong>End:</strong> {$t.end_date|date_format:'%m/%d/%y'}</td>
+		<td style='width:80px;'>{if $t.removal_date != $config.default_date_value}{$t.removal_date|date_format:'%m/%d/%y'}{else}No{/if}</td>
+		<td style=''><a href='{$config.site_url}admin/event_edit.php?id={$t.id}'>Edit</a> : <a href='{$config.site_url}admin/event_handler.php?mode=remove_event&id={$t.id}'>Delete</a></td>
+	</tr>
+	{/foreach}
+</table>
+
+{include file=admin/admin_footer.html}

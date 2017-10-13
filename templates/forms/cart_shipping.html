@@ -1,0 +1,22 @@
+<link rel="stylesheet"  type="text/css" href="{$config.site_url}assets/registration.css" />
+<form method='post' action='{$config.site_url}cart' id='cart_shipping'>
+	<input type='hidden' name='mode' value='shipping' />
+	<ul>
+		<li style='margin:0;padding:0;'>
+			<label class="description">Calculate Shipping</label>
+			<div class='smaller'>
+				Enter your zip code and country to getting a shipping estimate. Final shipping costs will be calculated using your shipping address.
+			</div>
+			<div class="left" style='width:80px;'>
+				<input id="username" name="data[postal_code]" class="element text medium" type="text" maxlength="255" value="{$smarty.session.order_data.postal_code}" />
+				<label for="username" class='required'>Postal Code</label>
+			</div>
+			<div class="left" style='padding-left:10px;width:200px;'>
+				{core assign=countries method=getCategories table=countries}
+				{html_options options=$countries name=data[country] class='element select medium' selected=$smarty.session.order_data.country|default:'US'}
+				<label for="country" class='required'>Country</label>
+			</div>
+			<input type='image' src='{$config.image_url}btn_calculate.png' class='swap' />
+		</li>
+	</ul>
+</form>
